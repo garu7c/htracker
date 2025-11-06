@@ -1,12 +1,95 @@
 export default function SignUpPage() {
   return (
-    // Estilos mínimos para centrar la página de Login/Registro
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
-      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md text-center">
-        <h1 className="text-3xl font-bold mb-4 text-gray-800">Crear Cuenta</h1>
-        <p className="text-gray-600">
-          Esta es la página de Registro (/signup). 
-          Aquí desarrollarás el formulario.
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="w-full max-w-md px-8 py-10 bg-white rounded-2xl shadow-lg transform transition-all hover:scale-[1.01]">
+        <div className="text-center mb-10">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Crear cuenta</h1>
+          <p className="text-gray-600">Comienza tu viaje hacia una vida más saludable</p>
+        </div>
+        
+        <form className="space-y-6">
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                Nombre completo
+              </label>
+              <input
+                id="name"
+                type="text"
+                required
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900"
+                placeholder="Nombre Apellido"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                Correo electrónico
+              </label>
+              <input
+                id="email"
+                type="email"
+                required
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900"
+                placeholder="tu@email.com"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                Contraseña
+              </label>
+              <input
+                id="password"
+                type="password"
+                required
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900"
+                placeholder="••••••••"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+                Confirmar contraseña
+              </label>
+              <input
+                id="confirmPassword"
+                type="password"
+                required
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900"
+                placeholder="••••••••"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center">
+            <input
+              id="terms"
+              type="checkbox"
+              required
+              className="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <label htmlFor="terms" className="ml-2 block text-sm text-gray-600">
+              Acepto los{' '}
+              <a href="#" className="text-blue-500 hover:text-blue-600 transition-colors">
+                términos y condiciones
+              </a>
+            </label>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full py-3 px-4 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            Crear cuenta
+          </button>
+        </form>
+
+        <p className="mt-8 text-center text-sm text-gray-600">
+          ¿Ya tienes una cuenta?{' '}
+          <a href="/login" className="text-blue-500 hover:text-blue-600 font-medium transition-colors">
+            Inicia sesión aquí
+          </a>
         </p>
       </div>
     </div>
