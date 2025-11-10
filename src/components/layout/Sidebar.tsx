@@ -6,19 +6,21 @@ import { usePathname } from 'next/navigation';
 
 // Iconos de lucide-react
 import { TrendingUp, Droplets, Utensils, Moon, Dumbbell } from 'lucide-react';
+import { getTexts } from '@/lib/i18n';
 
 // Definición de los elementos del menú (Ajustado a tu estructura de carpetas)
 const sidebarItems = [
-  // Dashboard principal es ahora /main/stats
-  { href: '/stats', title: 'Datos y Análisis', icon: TrendingUp },
-  { href: '/exercises', title: 'Ejercicio', icon: Dumbbell },
-  { href: '/nutrition', title: 'Alimentación', icon: Utensils },
-  { href: '/sleep', title: 'Sueño', icon: Moon },
-  { href: '/hydration', title: 'Hidratación', icon: Droplets },
+  // Usa keys para resolver títulos desde el JSON de textos
+  { key: 'stats', href: '/stats', icon: TrendingUp },
+  { key: 'exercises', href: '/exercises', icon: Dumbbell },
+  { key: 'nutrition', href: '/nutrition', icon: Utensils },
+  { key: 'sleep', href: '/sleep', icon: Moon },
+  { key: 'hydration', href: '/hydration', icon: Droplets },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const t = getTexts();
   
   // Función auxiliar para determinar si un enlace está activo
   const isActive = (href: string) => {
@@ -36,13 +38,13 @@ export default function Sidebar() {
     <aside className="w-64 border-r fixed h-full bg-white z-10">
       <div className="p-6 border-b">
         <div className="space-y-1">
-          <h1 className="text-xl font-semibold">Tracker de Hábitos</h1>
-          <p className="text-sm text-gray-500">Vida saludable</p>
+          <h1 className="text-xl font-semibold">{t.sidebar.title}</h1>
+          <p className="text-sm text-gray-500">{t.sidebar.subtitle}</p>
         </div>
       </div>
       
       <nav className="p-4 space-y-1">
-        {sidebarItems.map(({ href, title, icon: Icon }) => (
+        {sidebarItems.map(({ href, key, icon: Icon }) => (
           <div key={href}>
             <Link
               href={href}
@@ -53,7 +55,7 @@ export default function Sidebar() {
               }`}
             >
               <Icon className="h-5 w-5 mr-2" />
-              <span>{title}</span>
+              <span>{t.sidebar.items[key]}</span>
             </Link>
           </div>
         ))}

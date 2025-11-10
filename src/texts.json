@@ -1,0 +1,138 @@
+{
+  "es": {
+    "sidebar": {
+      "title": "Tracker de Hábitos",
+      "subtitle": "Vida saludable",
+      "items": {
+        "stats": "Datos y Análisis",
+        "exercises": "Ejercicio",
+        "nutrition": "Alimentación",
+        "sleep": "Sueño",
+        "hydration": "Hidratación"
+      }
+    }
+    ,
+    "auth": {
+      "login": {
+        "title": "Bienvenido",
+        "subtitle": "Inicia sesión para continuar",
+        "email": "Correo electrónico",
+        "password": "Contraseña",
+        "remember": "Recordarme",
+        "forgot": "¿Olvidaste tu contraseña?",
+        "submit": "Iniciar sesión",
+        "noAccount": "¿No tienes una cuenta?",
+        "signupLink": "Regístrate aquí",
+        "emailPlaceholder": "tu@email.com",
+        "passwordPlaceholder": "••••••••"
+      },
+      "signup": {
+        "title": "Crear cuenta",
+        "subtitle": "Comienza tu viaje hacia una vida más saludable",
+        "name": "Nombre completo",
+        "email": "Correo electrónico",
+        "password": "Contraseña",
+        "confirmPassword": "Confirmar contraseña",
+        "terms": "Acepto los términos y condiciones",
+        "submit": "Crear cuenta",
+        "haveAccount": "¿Ya tienes una cuenta?",
+        "loginLink": "Inicia sesión aquí",
+        "placeholders": {
+          "name": "Nombre Apellido",
+          "email": "tu@email.com",
+          "password": "••••••••"
+        }
+      }
+    },
+    "pages": {
+      "stats": {
+        "title": "Datos y Análisis",
+        "description": "Esta es la página de datos y análisis."
+      },
+      "exercises": {
+        "title": "Ejercicio",
+        "description": "Esta es la página de ejercicio."
+      },
+      "nutrition": {
+        "title": "Alimentación",
+        "description": "Esta es la página de alimentación."
+      },
+      "sleep": {
+        "title": "Sueño",
+        "description": "Esta es la página de sueño."
+      },
+      "hydration": {
+        "title": "Hidratación",
+        "description": "Esta es la página de hidratación."
+      }
+    }
+  },
+  "en": {
+    "sidebar": {
+      "title": "Habits Tracker",
+      "subtitle": "Healthy living",
+      "items": {
+        "stats": "Stats & Insights",
+        "exercises": "Exercises",
+        "nutrition": "Nutrition",
+        "sleep": "Sleep",
+        "hydration": "Hydration"
+      }
+    }
+    ,
+    "auth": {
+      "login": {
+        "title": "Welcome",
+        "subtitle": "Sign in to continue",
+        "email": "Email",
+        "password": "Password",
+        "remember": "Remember me",
+        "forgot": "Forgot your password?",
+        "submit": "Sign in",
+        "noAccount": "Don't have an account?",
+        "signupLink": "Sign up",
+        "emailPlaceholder": "you@email.com",
+        "passwordPlaceholder": "••••••••"
+      },
+      "signup": {
+        "title": "Create account",
+        "subtitle": "Start your journey to a healthier life",
+        "name": "Full name",
+        "email": "Email",
+        "password": "Password",
+        "confirmPassword": "Confirm password",
+        "terms": "I accept the terms and conditions",
+        "submit": "Create account",
+        "haveAccount": "Already have an account?",
+        "loginLink": "Sign in",
+        "placeholders": {
+          "name": "First Last",
+          "email": "you@email.com",
+          "password": "••••••••"
+        }
+      }
+    },
+    "pages": {
+      "stats": {
+        "title": "Stats & Insights",
+        "description": "This is the stats and insights page."
+      },
+      "exercises": {
+        "title": "Exercises",
+        "description": "This is the exercises page."
+      },
+      "nutrition": {
+        "title": "Nutrition",
+        "description": "This is the nutrition page."
+      },
+      "sleep": {
+        "title": "Sleep",
+        "description": "This is the sleep page."
+      },
+      "hydration": {
+        "title": "Hydration",
+        "description": "This is the hydration page."
+      }
+    }
+  }
+}

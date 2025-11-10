@@ -1,8 +1,12 @@
+import { getTexts } from '@/lib/i18n';
+
 export default function SleepPage() {
+  const t = getTexts();
+
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold text-blue-600">Sleep Page</h1>
-      <p className="mt-2 text-gray-700">Esta es la página de sueño.</p>
+      <h1 className="text-2xl font-bold text-blue-600">{t.pages.sleep.title}</h1>
+      <p className="mt-2 text-gray-700">{t.pages.sleep.description}</p>
     </div>
   );
 }
