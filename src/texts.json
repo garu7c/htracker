@@ -9,13 +9,15 @@
         "nutrition": "Alimentación",
         "sleep": "Sueño",
         "hydration": "Hidratación"
-      }
+      },
+      "logout": "Cerrar sesión"
     }
     ,
     "auth": {
       "login": {
         "title": "Bienvenido",
         "subtitle": "Inicia sesión para continuar",
+        "username": "Nombre de usuario",
         "email": "Correo electrónico",
         "password": "Contraseña",
         "remember": "Recordarme",
@@ -23,12 +25,16 @@
         "submit": "Iniciar sesión",
         "noAccount": "¿No tienes una cuenta?",
         "signupLink": "Regístrate aquí",
+        "usernamePlaceholder": "tu_usuario",
         "emailPlaceholder": "tu@email.com",
-        "passwordPlaceholder": "••••••••"
+        "passwordPlaceholder": "••••••••",
+        "showPassword": "Mostrar contraseña",
+        "hidePassword": "Ocultar contraseña"
       },
       "signup": {
         "title": "Crear cuenta",
         "subtitle": "Comienza tu viaje hacia una vida más saludable",
+        "username": "Nombre de usuario",
         "name": "Nombre completo",
         "email": "Correo electrónico",
         "password": "Contraseña",
@@ -37,7 +43,10 @@
         "submit": "Crear cuenta",
         "haveAccount": "¿Ya tienes una cuenta?",
         "loginLink": "Inicia sesión aquí",
+        "showPassword": "Mostrar contraseña",
+        "hidePassword": "Ocultar contraseña",
         "placeholders": {
+          "username": "tu_usuario",
           "name": "Nombre Apellido",
           "email": "tu@email.com",
           "password": "••••••••"
@@ -77,13 +86,15 @@
         "nutrition": "Nutrition",
         "sleep": "Sleep",
         "hydration": "Hydration"
-      }
+      },
+      "logout": "Sign out"
     }
     ,
     "auth": {
       "login": {
         "title": "Welcome",
         "subtitle": "Sign in to continue",
+        "username": "Username",
         "email": "Email",
         "password": "Password",
         "remember": "Remember me",
@@ -91,12 +102,16 @@
         "submit": "Sign in",
         "noAccount": "Don't have an account?",
         "signupLink": "Sign up",
+        "usernamePlaceholder": "your_username",
         "emailPlaceholder": "you@email.com",
-        "passwordPlaceholder": "••••••••"
+        "passwordPlaceholder": "••••••••",
+        "showPassword": "Show password",
+        "hidePassword": "Hide password"
       },
       "signup": {
         "title": "Create account",
         "subtitle": "Start your journey to a healthier life",
+        "username": "Username",
         "name": "Full name",
         "email": "Email",
         "password": "Password",
@@ -105,7 +120,10 @@
         "submit": "Create account",
         "haveAccount": "Already have an account?",
         "loginLink": "Sign in",
+        "showPassword": "Show password",
+        "hidePassword": "Hide password",
         "placeholders": {
+          "username": "your_username",
           "name": "First Last",
           "email": "you@email.com",
           "password": "••••••••"

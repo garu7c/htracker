@@ -2,10 +2,10 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 // Iconos de lucide-react
-import { TrendingUp, Droplets, Utensils, Moon, Dumbbell } from 'lucide-react';
+import { TrendingUp, Droplets, Utensils, Moon, Dumbbell, LogOut } from 'lucide-react';
 import { getTexts } from '@/lib/i18n';
 
 // Definición de los elementos del menú (Ajustado a tu estructura de carpetas)
@@ -20,7 +20,17 @@ const sidebarItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const t = getTexts();
+
+  async function handleLogout() {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      router.push('/login');
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
+  }
   
   // Función auxiliar para determinar si un enlace está activo
   const isActive = (href: string) => {
@@ -48,7 +58,7 @@ export default function Sidebar() {
           <div key={href}>
             <Link
               href={href}
-              className={`flex items-center w-full px-3 py-2 rounded-lg text-base transition-colors ${
+              className={`flex items-center w-full px-3 py-2 rounded-lg text-base transition-colors cursor-pointer ${
                 isActive(href)
                   ? 'bg-blue-100 text-blue-600 font-semibold'
                   : 'text-gray-700 hover:bg-gray-100'
@@ -60,6 +70,16 @@ export default function Sidebar() {
           </div>
         ))}
       </nav>
+
+      <div className="absolute bottom-0 left-0 right-0 p-4 border-t">
+        <button
+          onClick={handleLogout}
+          className="flex items-center w-full px-3 py-2 rounded-lg text-base transition-colors text-gray-700 hover:bg-red-50 hover:text-red-600 cursor-pointer"
+        >
+          <LogOut className="h-5 w-5 mr-2" />
+          <span>{t.sidebar.logout}</span>
+        </button>
+      </div>
     </aside>
   );
 }
