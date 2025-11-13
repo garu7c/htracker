@@ -2,9 +2,11 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/middleware';
 
 // Rutas clave de tu aplicación
-const PROTECTED_PATH_PREFIX = '/main'; // Protege todo lo que empiece con /main (ej: /main/stats, /main/exercises)
-const AUTH_REDIRECT_PATH = '/auth/login'; // La ruta de tu login
-const HOME_REDIRECT_PATH = '/main/stats'; // La ruta de tu dashboard
+// Note: Next.js App Router route groups like `(main)` are NOT part of the public URL.
+// Protect the real public paths instead (without the grouping folder names).
+const PROTECTED_PATH_PREFIXES = ['/stats', '/exercises', '/nutrition', '/sleep', '/hydration'];
+const AUTH_REDIRECT_PATH = '/login'; // La ruta de tu login (App Router route group `(auth)` maps to `/login`)
+const HOME_REDIRECT_PATH = '/stats'; // La ruta de tu dashboard
 
 export async function middleware(request: NextRequest) {
   try {
@@ -17,12 +19,22 @@ export async function middleware(request: NextRequest) {
     } = await supabase.auth.getSession();
 
     const pathname = request.nextUrl.pathname;
-    const isProtected = pathname.startsWith(PROTECTED_PATH_PREFIX);
-    const isAuthPath = pathname.startsWith('/auth/');
+    const isProtected = PROTECTED_PATH_PREFIXES.some((p) => pathname.startsWith(p));
+    const isAuthPath = pathname.startsWith('/login') || pathname.startsWith('/signup');
+    const isHome = pathname === '/';
     
     // --- Lógica de Redirección ---
 
-    if (isProtected) {
+    if (isHome) {
+      // Si accede a la raíz y no está autenticado, va al login
+      if (!session) {
+        const redirectUrl = new URL(AUTH_REDIRECT_PATH, request.url);
+        return NextResponse.redirect(redirectUrl);
+      }
+      // Si está autenticado, va al dashboard
+      const redirectUrl = new URL(HOME_REDIRECT_PATH, request.url);
+      return NextResponse.redirect(redirectUrl);
+    } else if (isProtected) {
       // 1. Si está intentando acceder a una ruta PROTEGIDA (/main/...)
       if (!session) {
         // No hay sesión -> Redirige al login
@@ -39,7 +51,7 @@ export async function middleware(request: NextRequest) {
     }
 
     // 3. Continuar
-    // Si la sesión es válida o está en una ruta no protegida (como '/'), devuelve la respuesta con las cookies.
+    // Si la sesión es válida o está en una ruta no protegida, devuelve la respuesta con las cookies.
     return response;
 
   } catch (e) {

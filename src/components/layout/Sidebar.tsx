@@ -35,7 +35,7 @@ export default function Sidebar() {
   // Función auxiliar para determinar si un enlace está activo
   const isActive = (href: string) => {
     // Para el dashboard principal, la ruta debe ser exacta.
-    if (href === '/main/stats') {
+    if (href === '/stats') {
       return pathname === href;
     }
     

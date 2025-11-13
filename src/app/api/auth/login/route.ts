@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
-
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+import { createServerSupabaseClient } from '@/lib/server';
 
 export async function POST(request: Request) {
   try {
@@ -12,24 +10,21 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing email or password' }, { status: 400 });
     }
 
-    const resp = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        apikey: SUPABASE_ANON_KEY || '',
-        Authorization: `Bearer ${SUPABASE_ANON_KEY || ''}`,
-      },
-      body: JSON.stringify({ email, password }),
+    // Use the server Supabase client which will manage cookies via the
+    // cookie helpers configured in `createServerSupabaseClient`.
+    const supabase = createServerSupabaseClient();
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
     });
 
-    const data = await resp.json();
-
-    if (!resp.ok) {
-      // If Supabase returns 400/401 treat as user not found/invalid credentials
-      return NextResponse.json({ ok: false, error: data?.error || 'Invalid credentials' }, { status: resp.status });
+    if (error) {
+      return NextResponse.json({ ok: false, error: error.message || 'Invalid credentials' }, { status: 401 });
     }
 
-    // On success, return tokens (client may store them or just redirect)
+    // On success, the Supabase SSR client should have queued cookies to be
+    // set on the response. Return success to the client so it can redirect.
     return NextResponse.json({ ok: true, data }, { status: 200 });
   } catch (err: any) {
     return NextResponse.json({ ok: false, error: err?.message || 'Server error' }, { status: 500 });
