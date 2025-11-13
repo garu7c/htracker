@@ -6,9 +6,16 @@ export interface ExerciseEntry {
   entry_date: string; // date
   exercise_type: string;
   duration_minutes: number;
-  intensity: 'baja' | 'moderada' | 'alta';
+  intensity: 'baja' | 'moderada' | 'alta' | string;
 }
 
+// Define la estructura para las metas de ejercicio del usuario
+export interface UserExerciseGoals {
+  user_id: string; // uuid
+  exercise_goal_sessions: number; // Sesiones de ejercicio por día (Ej: 3)
+  exercise_goal_duration: number; // Duración mínima por sesión en minutos (Ej: 30)
+  current_streak_exercise: number;
+}
 // Define la estructura para el progreso diario del usuario
 export interface DailyProgress {
   current: number; // Sesiones completadas hoy

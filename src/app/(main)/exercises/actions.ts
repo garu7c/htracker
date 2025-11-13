@@ -2,13 +2,14 @@
 
 import { createServerSupabaseClient } from '@/lib/server';
 import { redirect } from 'next/navigation';
-import { ExerciseSectionData, DailyProgress, ExerciseEntry } from '@/types/db';
+import { ExerciseSectionData, DailyProgress, ExerciseEntry, UserExerciseGoals } from '@/types/db';
 
 function getTodayDateString(): string {
   const today = new Date();
   return today.toISOString().split('T')[0];
 }
 
+//Obtener todoos los datos de ejercicio del usuario para el dashboard
 export async function getExerciseDashboardData(): Promise<ExerciseSectionData> {
   const supabase = createServerSupabaseClient();
 
@@ -17,15 +18,24 @@ export async function getExerciseDashboardData(): Promise<ExerciseSectionData> {
     redirect('/login');
   }
 
-  const GOAL = 3;
+  //const GOAL = 3;
   const todayString = getTodayDateString();
 
+  //Obtener metas y racha
+  const goalsPromise = supabase
+    .from('user_goals')
+    .select('exercise_goal_sessions, exercise_goal_duration, current_streak_exercise')
+    .eq('user_id', user.id)
+    .single();
+
+  //Obtener el conteo de hoy  
   const progressPromise = supabase
     .from('exercise_entries')
     .select('id', { count: 'exact', head: true })
     .eq('user_id', user.id)
     .eq('entry_date', todayString);
 
+  //Historial reciente  
   const historyPromise = supabase
     .from('exercise_entries')
     .select('*')
@@ -34,6 +44,7 @@ export async function getExerciseDashboardData(): Promise<ExerciseSectionData> {
     .order('created_at', { ascending: false })
     .limit(5);
 
+  //Obtener entradas para calcular racha  
   const streakPromise = supabase
     .from('exercise_entries')
     .select('entry_date')
@@ -41,20 +52,32 @@ export async function getExerciseDashboardData(): Promise<ExerciseSectionData> {
     .gte('entry_date', new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0])
     .order('entry_date', { ascending: false });
 
-  const [progressResult, historyResult, streakResult] = await Promise.all([
+  const [progressResult, historyResult, streakResult, goalsResult] = await Promise.all([
     progressPromise,
     historyPromise,
-    streakPromise
+    streakPromise,
+    goalsPromise,
   ]);
+
+  let dailyGoal = 0;
+  let currentStreak = 0;
+
+  if (goalsResult.data) {
+    dailyGoal = goalsResult.data.exercise_goal_sessions ?? 0;
+    currentStreak = goalsResult.data.current_streak_exercise ?? 0;
+  } else {
+    dailyGoal = 0;
+    currentStreak = 0;
+  }
 
   const progress: DailyProgress = {
     current: progressResult.count ?? 0,
-    goal: GOAL,
-    streak: 0,
+    goal: dailyGoal,
+    streak: currentStreak,
   };
 
-  const history: ExerciseEntry[] = historyResult.data || [];
-
+  const history: ExerciseEntry[] = (historyResult.data as ExerciseEntry[]) || [];
+/*
   if (streakResult.data) {
     const uniqueDates = [...new Set(streakResult.data.map(e => e.entry_date))];
     
@@ -80,7 +103,7 @@ export async function getExerciseDashboardData(): Promise<ExerciseSectionData> {
     }
     progress.streak = currentStreak;
   }
-
+*/
   return { progress, history };
 }
 
@@ -134,6 +157,7 @@ export async function saveUserExerciseGoals(goals: {
   return { success: true };
 }
 
+//Registrar una nueva entrada de ejercicio
 export async function addExerciseEntry(formData: FormData): Promise<{ success: boolean; message: string }> {
   const supabase = createServerSupabaseClient();
   const todayString = getTodayDateString();
@@ -159,6 +183,7 @@ export async function addExerciseEntry(formData: FormData): Promise<{ success: b
     return { success: false, message: 'Intensidad no válida.' };
   }
 
+  //Crear la nueva entrada
   const newEntry = {
     user_id: user.id,
     entry_date: todayString,
