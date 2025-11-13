@@ -3,6 +3,7 @@
 import { createServerSupabaseClient } from '@/lib/server';
 import { redirect } from 'next/navigation';
 import { ExerciseSectionData, DailyProgress, ExerciseEntry, UserExerciseGoals } from '@/types/db';
+import { User } from '@supabase/supabase-js';
 
 function getTodayDateString(): string {
   const today = new Date();
@@ -24,14 +25,14 @@ export async function getExerciseDashboardData(): Promise<ExerciseSectionData> {
   //Obtener metas y racha
   const goalsPromise = supabase
     .from('user_goals')
-    .select('exercise_goal_sessions, exercise_goal_duration, current_streak_exercise')
+    .select('exercise_goal_duration, current_streak_exercise')
     .eq('user_id', user.id)
     .single();
 
   //Obtener el conteo de hoy  
   const progressPromise = supabase
     .from('exercise_entries')
-    .select('id', { count: 'exact', head: true })
+    .select('duration_minutes', { count: 'exact'})
     .eq('user_id', user.id)
     .eq('entry_date', todayString);
 
@@ -59,20 +60,19 @@ export async function getExerciseDashboardData(): Promise<ExerciseSectionData> {
     goalsPromise,
   ]);
 
-  let dailyGoal = 0;
+  let dailyGoalDuration = 0;
   let currentStreak = 0;
 
   if (goalsResult.data) {
-    dailyGoal = goalsResult.data.exercise_goal_sessions ?? 0;
+    dailyGoalDuration = goalsResult.data.exercise_goal_duration ?? 0;
     currentStreak = goalsResult.data.current_streak_exercise ?? 0;
-  } else {
-    dailyGoal = 0;
-    currentStreak = 0;
   }
 
+  const totalMinutesToday = progressResult.data?.reduce((sum, entry) => sum + entry.duration_minutes, 0) ?? 0;
+
   const progress: DailyProgress = {
-    current: progressResult.count ?? 0,
-    goal: dailyGoal,
+    current: totalMinutesToday,
+    goal: dailyGoalDuration,
     streak: currentStreak,
   };
 
@@ -131,30 +131,34 @@ export async function getUserExerciseGoals(): Promise<{ daily_sessions_goal: num
   };
 }
 
-export async function saveUserExerciseGoals(goals: {
-  daily_sessions_goal: number;
-  min_duration_goal: number;
-}): Promise<{ success: boolean; error?: string }> {
+export async function saveUserExerciseGoals({ durationGoal }: {
+  durationGoal: number
+}): Promise<{ success: boolean; message: string }> {
   const supabase = createServerSupabaseClient();
 
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
-    return { success: false, error: 'Usuario no autenticado' };
+    return { success: false, message: 'Usuario no autenticado' };
   }
+
+  const goalUpdate = {
+    user_id: user.id, // Asegúrate de incluir el user_id
+    exercise_goal_duration: durationGoal,
+    created_at: new Date().toISOString(),
+  };
 
   const { error } = await supabase
-    .from('user_exercise_goals')
-    .upsert({
-      user_id: user.id,
-      daily_sessions_goal: goals.daily_sessions_goal,
-      min_duration_goal: goals.min_duration_goal,
-    }, { onConflict: 'user_id' });
+    .from('user_goals')
+    .upsert(goalUpdate, {
+      onConflict: 'user_id'
+    });
 
   if (error) {
-    return { success: false, error: error.message };
+    console.error('Error al guardar metas de ejercicio:', error.message);
+    return { success: false, message: error.message };
   }
 
-  return { success: true };
+  return { success: true, message: 'Metas guardadas exitosamente.' };
 }
 
 //Registrar una nueva entrada de ejercicio
@@ -184,7 +188,7 @@ export async function addExerciseEntry(formData: FormData): Promise<{ success: b
   }
 
   //Crear la nueva entrada
-  const newEntry = {
+  const newEntry: Omit<ExerciseEntry, 'id' | 'created_at'> = {
     user_id: user.id,
     entry_date: todayString,
     exercise_type: exerciseType,
