@@ -120,3 +120,13 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Cuando el sidebar está expandido */
+.sidebar-expanded\:ml-64 {
+  margin-left: 16rem;
+}
+
+/* Cuando el sidebar está colapsado */
+.sidebar-collapsed\:ml-20 {
+  margin-left: 5rem;
+}

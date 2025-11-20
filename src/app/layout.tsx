@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Sidebar from '@/components/layout/Sidebar';
+import { Toaster } from '@/components/ui/sonner';
+import { cookies } from 'next/headers';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,24 +16,54 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "HTracker",
+  title: "Allive",
   description: "Dashboard de seguimiento de hábitos",
   icons: {
-    icon: '/icon.svg',
+    icon: '/ptm.svg',
   },
 };
 
-export default function RootLayout({
+// Función para verificar autenticación
+async function isAuthenticated() {
+  const cookieStore = await cookies();
+  const sessionToken = cookieStore.get('session-token'); // Ajusta según tu implementación
+  return !!sessionToken;
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const authenticated = await isAuthenticated();
+
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        {/* Solo mostrar el layout de la app si está autenticado */}
+        {authenticated ? (
+          <div className="min-h-screen bg-blue-50/40">
+            {/* Header con título fuera del sidebar */}
+            <header className="fixed top-6 left-6 z-50">
+              <h1 className="text-2xl font-bold text-gray-800 ml-24">HTracker</h1>
+            </header>
+
+            {/* Sidebar principal */}
+            <Sidebar />
+
+            {/* Contenido Principal */}
+            <main className="min-h-screen pl-[7rem] pt-6 pr-6 pb-6 bg-blue-50">
+              {children}
+            </main>
+          </div>
+        ) : (
+          // Si no está autenticado, mostrar solo el contenido sin sidebar
+          <div className="min-h-screen bg-gray-50">
+            {children}
+          </div>
+        )}
+
+        <Toaster />
       </body>
     </html>
   );

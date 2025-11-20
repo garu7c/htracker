@@ -19,9 +19,10 @@ export async function getNutritionDashboardData(): Promise<NutritionSectionData>
 
   const todayString = getTodayDateString();
 
+  // user_goals table holds consolidated goals (exercise, nutrition, hydration, etc.)
   const goalsPromise = supabase
-    .from('user_nutrition_goals')
-    .select('meals_per_day')
+    .from('user_goals')
+    .select('nutrition_goal_meals')
     .eq('user_id', user.id)
     .single();
 
@@ -44,7 +45,7 @@ export async function getNutritionDashboardData(): Promise<NutritionSectionData>
     goalsPromise,
   ]);
 
-  const mealsGoal = (goalsResult.data && (goalsResult.data.meals_per_day ?? 3)) || 3;
+  const mealsGoal = (goalsResult.data && (goalsResult.data.nutrition_goal_meals ?? 3)) || 3;
 
   const progress = {
     current: progressResult.count ?? 0,
@@ -64,32 +65,44 @@ export async function getUserNutritionGoals(): Promise<NutritionGoals> {
     redirect('/login');
   }
 
-  const { data, error } = await supabase
-    .from('user_nutrition_goals')
-    .select('user_id, meals_per_day')
-    .eq('user_id', user.id)
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from('user_goals')
+      .select('user_id, nutrition_goal_meals')
+      .eq('user_id', user.id)
+      .single();
 
-  if (error || !data) {
+    if (error || !data) {
+      return { user_id: user.id, meals_per_day: 3 };
+    }
+
+    return { user_id: data.user_id, meals_per_day: data.nutrition_goal_meals ?? 3 } as NutritionGoals;
+  } catch (e) {
     return { user_id: user.id, meals_per_day: 3 };
   }
-
-  return data as NutritionGoals;
 }
 
-export async function saveUserNutritionGoals(formData: FormData) {
+export async function saveUserNutritionGoals(formData: FormData): Promise<{ success: boolean; message?: string }> {
   const supabase = createServerSupabaseClient();
   const { data: { user } = {} } = await supabase.auth.getUser();
-  if (!user) return;
+  if (!user) return { success: false, message: 'Usuario no autenticado' };
 
   const meals = Number(formData.get('meals_per_day') || 3);
 
-  const { error } = await supabase.from('user_nutrition_goals').upsert({
+  const payload = {
     user_id: user.id,
-    meals_per_day: meals,
-  }, { onConflict: 'user_id' });
+    nutrition_goal_meals: meals,
+    created_at: new Date().toISOString(),
+  };
 
-  if (error) throw error;
+  const { error } = await supabase.from('user_goals').upsert(payload, { onConflict: 'user_id' });
+
+  if (error) {
+    console.error('Error guardando metas de nutrición:', error.message || error);
+    return { success: false, message: error.message || 'Error al guardar metas' };
+  }
+
+  return { success: true, message: 'Metas guardadas exitosamente.' };
 }
 
 export async function addNutritionEntry(formData: FormData): Promise<{ success: boolean; message?: string }> {

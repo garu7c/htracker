@@ -1,4 +1,24 @@
-/*// Define la estructura de una entrada individual de ejercicio de Supabase
+// types/db.ts
+// Asegúrate de que este archivo está ubicado para ser importado como @/types/db
+
+// ----------------------------------------------------------------
+// Shared Types (Tipos Compartidos)
+// ----------------------------------------------------------------
+
+/**
+ * Define la estructura para el progreso diario de cualquier sección.
+ * Dependiendo del contexto, 'current' y 'goal' pueden ser sesiones, minutos, horas o mililitros.
+ */
+export interface DailyProgress {
+  current: number; // Sesiones/Minutos/Volumen completados hoy
+  goal: number;    // Meta diaria (sesiones/minutos/horas/ml)
+  streak: number;  // Racha actual de días consecutivos
+}
+
+
+// ----------------------------------------------------------------
+// EXERCISE types (Ejercicio)
+// ----------------------------------------------------------------
 export interface ExerciseEntry {
   id: number;
   user_id: string; // uuid
@@ -9,58 +29,54 @@ export interface ExerciseEntry {
   intensity: 'baja' | 'moderada' | 'alta' | string;
 }
 
-// Define la estructura para las metas de ejercicio del usuario
 export interface UserExerciseGoals {
   user_id: string; // uuid
   exercise_goal_sessions: number; // Sesiones de ejercicio por día (Ej: 3)
   exercise_goal_duration: number; // Duración mínima por sesión en minutos (Ej: 30)
   current_streak_exercise: number;
 }
-// Define la estructura para el progreso diario del usuario
-export interface DailyProgress {
-  current: number; // Sesiones completadas hoy
-  goal: number;    // Meta de sesiones diarias (Ej: 3)
-  streak: number;  // Racha actual de días consecutivos
-}
 
-// Define la estructura de datos que recibe el componente ExerciseSection (Actualizado)
-export interface ExerciseSectionData {
-  progress: DailyProgress;
-  history: ExerciseEntry[];
-}
-  */
-// Define la estructura de una entrada individual de ejercicio de Supabase
-export interface ExerciseEntry {
-  id: number;
-  user_id: string; // uuid
-  created_at: string; // timestamp con zona horaria
-  entry_date: string; // date
-  exercise_type: string;
-  duration_minutes: number;
-  intensity: 'baja' | 'moderada' | 'alta' | string;
-}
-
-// Define la estructura para las metas de ejercicio del usuario
-export interface UserExerciseGoals {
-  user_id: string; // uuid
-  exercise_goal_sessions: number; // Sesiones de ejercicio por día (Ej: 3)
-  exercise_goal_duration: number; // Duración mínima por sesión en minutos (Ej: 30)
-  current_streak_exercise: number;
-}
-// Define la estructura para el progreso diario del usuario
-export interface DailyProgress {
-  current: number; // Sesiones completadas hoy
-  goal: number;    // Meta de sesiones diarias (Ej: 3)
-  streak: number;  // Racha actual de días consecutivos
-}
-
-// Define la estructura de datos que recibe el componente ExerciseSection (Actualizado)
 export interface ExerciseSectionData {
   progress: DailyProgress;
   history: ExerciseEntry[];
 }
 
-// Nutrition types
+
+// ----------------------------------------------------------------
+// SLEEP types (Sueño)
+// ----------------------------------------------------------------
+export interface SleepEntry {
+  id: number; // bigint
+  user_id: string;
+  sleep_date: string; 
+  time_sleep: string; 
+  time_wake: string; 
+  quality: 'mala' | 'regular' | 'buena' | 'excelente' | string;
+  total_hours: number; 
+  created_at: string;
+}
+
+export interface DailySleepProgress {
+  current: number; 
+  goal: number;    
+  streak: number;  
+}
+
+export interface UserSleepGoals {
+    target_hours: number; 
+    bedtime_goal: string; 
+    wakeup_goal: string; 
+    current_streak_sleep?: number;
+}
+
+export interface SleepSectionData {
+    progress: DailySleepProgress;
+    history: SleepEntry[];
+    goals: UserSleepGoals;
+}
+
+
+
 export interface NutritionEntry {
   id: number;
   user_id: string;
@@ -81,18 +97,19 @@ export interface NutritionSectionData {
   history: NutritionEntry[];
 }
 
-// Hydration types
+
 export interface HydrationEntry {
   id: number;
   user_id: string;
   created_at: string;
   entry_date: string;
-  volume_ml: number;
+  quantity: number; 
+  beverage_type: string; 
 }
 
 export interface HydrationGoals {
   user_id: string;
-  ml_per_day: number;
+  cups_per_day: number; 
 }
 
 export interface HydrationSectionData {

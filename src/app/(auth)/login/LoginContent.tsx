@@ -47,7 +47,6 @@ export default function LoginContent() {
         return;
       }
 
-      // On failure, show error message
       setMessage({ type: 'error', text: json.error || 'Login failed' });
     } catch (err) {
       setMessage({ type: 'error', text: 'Server error' });

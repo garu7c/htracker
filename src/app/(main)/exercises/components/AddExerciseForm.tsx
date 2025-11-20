@@ -40,8 +40,8 @@ export default function AddExerciseForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Plus className="h-5 w-5" />
+        <CardTitle className="flex items-center text-xl gap-2">
+          <Plus className="h-6 w-6" />
           Registrar Ejercicio
         </CardTitle>
       </CardHeader>
@@ -49,7 +49,7 @@ export default function AddExerciseForm() {
         <form action={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="exercise-type">Tipo de Ejercicio</Label>
+              <Label htmlFor="exercise-type"className="text-[18px]">Tipo de Ejercicio</Label>
               <Select value={exerciseType} onValueChange={setExerciseType} name="exerciseType">
                 <SelectTrigger id="exercise-type">
                   <SelectValue placeholder="Seleccionar tipo" />
@@ -65,8 +65,8 @@ export default function AddExerciseForm() {
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="duration">Duración (minutos)</Label>
+            <div className="space-y-2 pr-28">
+              <Label htmlFor="duration"className='text-[18px]'>Duración (minutos)</Label>
               <Input
                 id="duration"
                 name="duration"
@@ -78,10 +78,10 @@ export default function AddExerciseForm() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="intensity">Intensidad</Label>
+              <Label htmlFor="intensity"className='text-[18px]'>Intensidad</Label>
               <Select value={intensity} onValueChange={setIntensity} name="intensity">
                 <SelectTrigger id="intensity">
-                  <SelectValue placeholder="Seleccionar intensidad" />
+                  <SelectValue placeholder="Seleccionar intensidad"/>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="baja">Baja</SelectItem>
@@ -98,7 +98,7 @@ export default function AddExerciseForm() {
             </p>
           )}
 
-          <Button type="submit" className="w-full" disabled={isPending || !exerciseType || !intensity}>
+          <Button type="submit" className="bg-blue-700 cursor-pointer" disabled={isPending || !exerciseType || !intensity}>
             {isPending ? (
               <>
                 <Clock className="h-4 w-4 mr-2 animate-spin" />

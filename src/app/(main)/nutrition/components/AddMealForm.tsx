@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import { addNutritionEntry } from '../actions';
 import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,21 +12,34 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 export default function AddMealForm() {
   const [loading, setLoading] = useState(false);
   const [mealType, setMealType] = useState('desayuno');
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [isPending, startTransition] = useTransition();
+
+  const router = useRouter();
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setMessage(null);
     setLoading(true);
     const form = e.currentTarget;
     const fd = new FormData(form);
     try {
       // @ts-ignore - server action
-      await addNutritionEntry(fd);
-      form.reset();
-      setMealType('desayuno');
-      // reload the page to show new entry
-      window.location.reload();
+      const res = await addNutritionEntry(fd);
+      if (res && res.success) {
+        setMessage({ type: 'success', text: 'Comida registrada.' });
+        form.reset();
+        setMealType('desayuno');
+        startTransition(() => {
+          router.refresh();
+        });
+      } else {
+        setMessage({ type: 'error', text: res?.message || 'Error registrando comida.' });
+        setLoading(false);
+      }
     } catch (err) {
       console.error(err);
+      setMessage({ type: 'error', text: 'Error registrando comida.' });
       setLoading(false);
     }
   }
