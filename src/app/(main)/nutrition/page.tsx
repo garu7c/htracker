@@ -2,10 +2,11 @@ import React from 'react';
 import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Clock, Target, Apple, Heart, Carrot, Utensils, Award } from 'lucide-react';
+import { Clock, Target, Apple, Heart, Carrot, Utensils, Award, Sparkles } from 'lucide-react';
 import { getNutritionDashboardData, getUserNutritionGoals } from './actions';
 import AddMealForm from './components/AddMealForm';
 import NutritionGoalsForm from './components/NutritionGoalsForm';
+import Image from 'next/image';
 
 const HistorialComidas = ({ entries }: { entries: any[] }) => {
   const emojiFor = (meal: string) => {
@@ -134,7 +135,7 @@ const NutritionTips = () => {
   const tips = [
     { 
       title: "Hidratación Adecuada", 
-      description: "Bebe 2L de agua al día", 
+      description: "Recuerda usar la seccion de hidratación", 
       emoji: "💧",
       benefit: "Mejora digestión"
     },
@@ -177,6 +178,7 @@ const NutritionTips = () => {
   );
 };
 
+
 export default async function NutritionPage() {
   const [data, goals] = await Promise.all([getNutritionDashboardData(), getUserNutritionGoals()]);
 
@@ -190,23 +192,50 @@ export default async function NutritionPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header con saludo */}
-      <div className="flex justify-between items-start">
-        <div>
-          <h1 className="text-[48px] font-bold text-gray-900">Dashboard de Nutrición</h1>
-          <p className="text-gray-600 mt-1">Allive - Tracker</p>
-        </div>
-        <Card className="bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 shadow-lg w-90 h-30">
-          <CardContent className="p-4 grid grid-cols-3 justify-items-center items-center gap-4">
-            <div><Apple className='w-12 h-12'/></div>
-            <div className="flex items-center justify-between col-span-2">
-              <div>
-                <h3 className="font-bold text-lg">Come Saludable!</h3>
-                <p className="text-sm opacity-90">Tu cuerpo te lo agradecerá</p>
+      {/* Hero Section con imagen más grande que sobresale */}
+      <div className="bg-gradient-to-r from-emerald-500 to-green-600 rounded-3xl p-8 text-white relative overflow-visible max-h-[350px] flex items-center">
+        <div className="relative z-10 w-full">
+          <div className="flex justify-between items-center">
+            <div className="max-w-2xl">
+              <div className="flex items-center gap-2 mb-4">
+                <Sparkles className="h-6 w-6 text-yellow-300" />
+                <span className="text-lg font-semibold text-green-100">NutriTracker</span>
+              </div>
+              
+              <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
+                Transforma Tu 
+                <span className="block text-yellow-300">Alimentación</span>
+              </h1>
+              <p className='text-white'>Una dieta saludable proporciona al cuerpo los nutrientes necesarios para funcionar correctamente, mantiene un peso adecuado y ayuda a prevenir enfermedades crónicas</p>
+            </div>
+            {/* Imagen más grande que sobresale del hero */}
+            <div className="hidden lg:block relative">
+              <div className="w-[700px] h-[600px] relative -top-12 -right-10">
+                {/* Efecto de brillo detrás de la imagen */}
+                <div className="absolute -inset-4 bg-yellow-200/20 rounded-full blur-xl"></div>
+                
+                {/* Contenedor de la imagen con animación de entrada desde abajo */}
+                <div className="relative w-full h-full rounded-2xl p-4 animate-slide-up">
+                  <Image
+                    src="/hero-nutr.png"
+                    alt="Comida saludable"
+                    width={700}
+                    height={600}
+                    className="w-full h-full object-contain drop-shadow-2xl"
+                    priority
+                  />
+                </div>
+                
+                {/* Elementos decorativos flotantes */}
+                <div className="absolute top-50 right-5 w-6 h-5 bg-yellow-500 rounded-full animate-pulse"></div>
+                <div className="absolute top-55 right-14 w-4 h-4 bg-green-300 rounded-full animate-pulse delay-1000"></div>
+                <div className="absolute top-50 left-8 w-3 h-3 bg-orange-400 rounded-full animate-pulse"></div>
+                <div className="absolute bottom-20 -left-2 w-5 h-5 bg-green-300 rounded-full animate-pulse delay-1000"></div>
+                <div className="absolute bottom-24 left-2 w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
       {/* Grid principal */}
