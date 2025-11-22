@@ -24,7 +24,7 @@ export async function getExerciseDashboardData(): Promise<ExerciseSectionData> {
 
   //Obtener metas y racha
   const goalsPromise = supabase
-    .from('user_goals')
+    .from('user_exercise_goals')
     .select('exercise_goal_duration, current_streak_exercise')
     .eq('user_id', user.id)
     .single();
@@ -148,7 +148,7 @@ export async function saveUserExerciseGoals({ durationGoal }: {
   };
 
   const { error } = await supabase
-    .from('user_goals')
+    .from('user_exercise_goals')
     .upsert(goalUpdate, {
       onConflict: 'user_id'
     });
@@ -183,7 +183,7 @@ export async function addExerciseEntry(formData: FormData): Promise<{ success: b
   if (isNaN(durationMinutes) || durationMinutes <= 0) {
     return { success: false, message: 'La duración debe ser un número positivo.' };
   }
-  if (!['baja', 'moderada', 'alta'].includes(intensity)) {
+  if (!['Baja', 'Moderada', 'Alta', 'baja', 'moderada', 'alta'].includes(intensity)) {
     return { success: false, message: 'Intensidad no válida.' };
   }
 
