@@ -2,10 +2,11 @@ import React from 'react';
 import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Droplets, Target, Clock, GlassWater, Waves } from 'lucide-react';
+import { Droplets, Target, Clock, GlassWater, Waves, Sparkles } from 'lucide-react';
 import { getHydrationDashboardData, getUserHydrationGoals } from './actions';
 import HydrationGoalsForm from './components/HydrationGoalsForm';
 import AddHydrationForm from './components/AddHydrationForm';
+import Image from 'next/image';
 
 const HydrationHistory = ({ entries }: { entries: any[] }) => {
   return (
@@ -184,23 +185,54 @@ export default async function HydrationPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header con saludo */}
-      <div className="flex justify-between items-start">
-        <div>
-          <h1 className="text-[48px] font-bold text-gray-900">Dashboard de Hidratación</h1>
-          <p className="text-gray-600 mt-1">Allive - Tracker</p>
-        </div>
-        <Card className="bg-gradient-to-r from-blue-500 to-cyan-600 text-white border-0 shadow-lg w-90 h-30">
-          <CardContent className="p-4 grid grid-cols-3 justify-items-center items-center gap-4">
-            <div><Droplets className='w-12 h-12'/></div>
-            <div className="flex items-center justify-between col-span-2">
-              <div>
-                <h3 className="font-bold text-lg">Mantente Hidratado!</h3>
-                <p className="text-sm opacity-90">Tu cuerpo necesita agua</p>
+      {/* Hero Section para hidratación */}
+      <div className="bg-gradient-to-r from-blue-600 to-cyan-500 rounded-3xl p-8 text-white relative overflow-visible max-h-[350px] flex items-center">
+        <div className="relative z-10 w-full">
+          <div className="flex justify-between items-center">
+            <div className="max-w-2xl">
+              <div className="flex items-center gap-2 mb-4">
+                <Sparkles className="h-6 w-6 text-white" />
+                <span className="text-lg font-semibold text-cyan-100">HydroTracker</span>
+              </div>
+              
+              <h1 className="text-4xl text-cyan-200 md:text-5xl font-bold mb-4 leading-tight">
+                Manten Tu Cuerpo
+                <span className="block text-white">Hidratado</span>
+              </h1>
+              <p className='text-cyan-100'>
+                La hidratación adecuada es esencial para todas las funciones corporales. 
+                Mejora la digestión, regula la temperatura corporal, lubrica las articulaciones y ayuda a transportar nutrientes.
+              </p>
+            </div>
+            
+            {/* Imagen más grande que sobresale del hero */}
+            <div className="hidden lg:block relative">
+              <div className="w-[700px] h-[450px] relative -top-8 -right-10">
+                {/* Efecto de brillo detrás de la imagen */}
+                <div className="absolute -inset-4 bg-yellow-200/20 rounded-full blur-xl"></div>
+                
+                {/* Contenedor de la imagen con animación de entrada desde abajo */}
+                <div className="relative w-full h-full rounded-2xl p-4 animate-slide-up">
+                  <Image
+                    src="/hero-hy.png" // Cambia por tu imagen de hidratación
+                    alt="Persona hidratándose saludablemente"
+                    width={700}
+                    height={600}
+                    className="w-full h-full object-contain drop-shadow-2xl"
+                    priority
+                  />
+                </div>
+                
+                {/* Elementos decorativos flotantes */}
+                <div className="absolute top-20 right-8 w-6 h-6 bg-gray-300 rounded-full animate-pulse"></div>
+                <div className="absolute top-32 right-16 w-4 h-4 bg-cyan-300 rounded-full animate-pulse delay-1000"></div>
+                <div className="absolute top-24 left-10 w-5 h-5 bg-blue-400 rounded-full animate-pulse delay-500"></div>
+                <div className="absolute bottom-24 -left-2 w-4 h-4 bg-blue-300 rounded-full animate-pulse delay-700"></div>
+                <div className="absolute bottom-32 left-4 w-3 h-3 bg-gray-300 rounded-full animate-pulse delay-300"></div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
       {/* Grid principal */}

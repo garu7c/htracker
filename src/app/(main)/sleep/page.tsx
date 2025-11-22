@@ -2,12 +2,13 @@ import React from 'react';
 import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Clock, Target, Moon, Star, Bed, Zap } from 'lucide-react';
+import { Clock, Target, Moon, Star, Bed, Zap, Sparkles } from 'lucide-react';
 import { getSleepDashboardData } from './actions';
 import { SleepEntry, DailySleepProgress } from '@/types/db';
 import AddSleepForm from './components/AddSleepForm';
 import SleepGoalsForm from './components/SleepGoalsForm'; 
 import SleepTips from './components/SleepTips';
+import Image from 'next/image';
 
 const SleepHistory = ({ entries }: { entries: SleepEntry[] }) => {
   const getQualityColor = (quality: string) => {
@@ -202,24 +203,54 @@ export default async function SleepPage() {
   };
 
   return (
-    <div className="space-y-6"> 
-      {/* Header con saludo */}
-      <div className="flex justify-between items-start">
-        <div>
-          <h1 className="text-[48px] font-bold text-gray-900">Dashboard de Sueño</h1>
-          <p className="text-gray-600 mt-1">Allive - Tracker</p>
-        </div>
-        <Card className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white border-0 shadow-lg w-90 h-30">
-          <CardContent className="p-4 grid grid-cols-3 justify-items-center items-center gap-4">
-            <div><Moon className='w-12 h-12'/></div>
-            <div className="flex items-center justify-between col-span-2">
-              <div>
-                <h3 className="font-bold text-lg">Hora de Descansar!</h3>
-                <p className="text-sm opacity-90">Tu mente te lo agradecerá</p>
+    <div className="space-y-6">
+      {/* Hero Section para sueño */}
+      <div className="bg-gradient-to-r from-purple-800 to-indigo-700 rounded-3xl p-8 text-white relative overflow-visible max-h-[350px] flex items-center">
+        <div className="relative z-10 w-full">
+          <div className="flex justify-between items-center">
+            <div className="max-w-2xl">
+              <div className="flex items-center gap-2 mb-4">
+                <Sparkles className="h-6 w-6 text-indigo-500" />
+                <span className="text-lg font-semibold text-indigo-100">SleepTracker</span>
+              </div>
+              
+              <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
+                Duerme Lo 
+                <span className="block text-indigo-500">Suficiente</span>
+              </h1>
+              <p className='text-white'>
+                Un sueño de calidad es fundamental para la salud física y mental. 
+                Mejora la memoria, fortalece el sistema inmunológico y renueva tu energía para el día siguiente.
+              </p>
+            </div>
+            
+            {/* Imagen más grande que sobresale del hero */}
+            <div className="hidden lg:block relative">
+              <div className="w-[700px] h-[600px] relative -top-12 -right-10">
+                {/* Efecto de brillo detrás de la imagen */}
+                <div className="absolute -inset-4 rounded-full blur-xl"></div>
+                
+                {/* Contenedor de la imagen con animación de entrada desde abajo */}
+                <div className="relative w-full h-full rounded-2xl p-4 animate-slide-up">
+                  <Image
+                    src="/hero-sleep.png" // Cambia por tu imagen de sueño
+                    alt="Persona durmiendo tranquilamente"
+                    width={700}
+                    height={600}
+                    className="w-full h-full object-contain drop-shadow-2xl"
+                    priority
+                  />
+                </div>
+                
+                {/* Elementos decorativos flotantes */}
+                <div className="absolute top-40 right-16 w-6 h-6 bg-gray-300 rounded-full animate-pulse"></div>
+                <div className="absolute top-44 right-12 w-4 h-4 bg-purple-300 rounded-full animate-pulse delay-1000"></div>
+                <div className="absolute bottom-40 left-14 w-4 h-4 bg-indigo-300 rounded-full animate-pulse delay-700"></div>
+                <div className="absolute bottom-44 left-8 w-3 h-3 bg-gray-300 rounded-full animate-pulse delay-300"></div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
       {/* Grid principal */}

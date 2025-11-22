@@ -198,13 +198,13 @@ export default async function NutritionPage() {
           <div className="flex justify-between items-center">
             <div className="max-w-2xl">
               <div className="flex items-center gap-2 mb-4">
-                <Sparkles className="h-6 w-6 text-yellow-300" />
+                <Sparkles className="h-6 w-6 text-yellow-400" />
                 <span className="text-lg font-semibold text-green-100">NutriTracker</span>
               </div>
               
               <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
-                Transforma Tu 
-                <span className="block text-yellow-300">Alimentación</span>
+                Cuida Tu 
+                <span className="block text-yellow-400">Alimentación</span>
               </h1>
               <p className='text-white'>Una dieta saludable proporciona al cuerpo los nutrientes necesarios para funcionar correctamente, mantiene un peso adecuado y ayuda a prevenir enfermedades crónicas</p>
             </div>

@@ -144,6 +144,7 @@
   animation: float 6s ease-in-out infinite;
 }
 
+/* Animaciones de Slide - CSS Global */
 @keyframes slide-up {
   0% {
     opacity: 0;
@@ -155,6 +156,145 @@
   }
 }
 
+@keyframes slide-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes slide-left {
+  0% {
+    opacity: 0;
+    transform: translateX(40px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes slide-right {
+  0% {
+    opacity: 0;
+    transform: translateX(-40px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes slide-up-right {
+  0% {
+    opacity: 0;
+    transform: translate(40px, 40px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes slide-up-left {
+  0% {
+    opacity: 0;
+    transform: translate(-40px, 40px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes slide-down-right {
+  0% {
+    opacity: 0;
+    transform: translate(40px, -40px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes slide-down-left {
+  0% {
+    opacity: 0;
+    transform: translate(-40px, -40px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+/* Clases de utilidad para las animaciones */
 .animate-slide-up {
   animation: slide-up 0.8s ease-out forwards;
+}
+
+.animate-slide-down {
+  animation: slide-down 0.8s ease-out forwards;
+}
+
+.animate-slide-left {
+  animation: slide-left 0.8s ease-out forwards;
+}
+
+.animate-slide-right {
+  animation: slide-right 0.8s ease-out forwards;
+}
+
+.animate-slide-up-right {
+  animation: slide-up-right 0.8s ease-out forwards;
+}
+
+.animate-slide-up-left {
+  animation: slide-up-left 0.8s ease-out forwards;
+}
+
+.animate-slide-down-right {
+  animation: slide-down-right 0.8s ease-out forwards;
+}
+
+.animate-slide-down-left {
+  animation: slide-down-left 0.8s ease-out forwards;
+}
+
+/* Variantes con diferentes duraciones */
+.animate-slide-up-fast {
+  animation: slide-up 0.4s ease-out forwards;
+}
+
+.animate-slide-up-slow {
+  animation: slide-up 1.2s ease-out forwards;
+}
+
+.animate-slide-down-fast {
+  animation: slide-down 0.4s ease-out forwards;
+}
+
+.animate-slide-down-slow {
+  animation: slide-down 1.2s ease-out forwards;
+}
+
+/* Variantes con delays */
+.animate-slide-up-delay-1 {
+  animation: slide-up 0.8s ease-out 0.2s forwards;
+  opacity: 0;
+}
+
+.animate-slide-up-delay-2 {
+  animation: slide-up 0.8s ease-out 0.4s forwards;
+  opacity: 0;
+}
+
+.animate-slide-up-delay-3 {
+  animation: slide-up 0.8s ease-out 0.6s forwards;
+  opacity: 0;
 }

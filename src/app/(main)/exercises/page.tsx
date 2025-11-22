@@ -2,11 +2,12 @@ import React from 'react';
 import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Clock, Target, Zap, Heart, Droplets, Flame, Award } from 'lucide-react';
+import { Clock, Target, Zap, Heart, Droplets, Flame, Award, Sparkles } from 'lucide-react';
 import { getExerciseDashboardData } from './actions';
 import AddExerciseForm from './components/AddExerciseForm';
 import ExerciseGoalsForm from './components/ExerciseGoalsForm';
 import { DailyProgress, ExerciseEntry } from '@/types/db'; 
+import Image from 'next/image';
 
 interface Entry extends ExerciseEntry {}
 
@@ -120,25 +121,25 @@ const ProgressDisplay = ({ progress }: { progress: DailyProgress }) => {
 const HealthStats = () => {
   return (
     <div className="grid grid-cols-2 gap-4">
-      <Card className="bg-gradient-to-b from-gray-300 to-indigo-600 backdrop-blur-sm border border-gray-200">
+      <Card className="bg-gradient-to-b from-gray-300 to-indigo-600 backdrop-blur-sm border border-gray-200 text-white ">
         <CardContent className="p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Heart className="h-4 w-4 text-red-500" />
+            <Heart className="h-4 w-4 text-red-400" />
             <span className="text-sm font-medium">Cardio</span>
           </div>
-          <p className="text-7xl font-bold">X</p>
-          <p className="text-xs text-gray-100 mt-1">Cantidad de sesiones</p>
+          <p className="text-3xl font-bold">5</p>
+          <p className="text-xs text-indigo-100 mt-1">Sesiones esta semana</p>
         </CardContent>
       </Card>
       
-      <Card className="bg-gradient-to-t from-indigo-600 to-pink-600 backdrop-blur-sm border border-gray-200">
+      <Card className="bg-gradient-to-t from-indigo-600 to-pink-600 backdrop-blur-sm border border-gray-200 text-white ">
         <CardContent className="p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Flame className="h-4 w-4 text-orange-500" />
+            <Flame className="h-4 w-4 text-orange-400" />
             <span className="text-sm font-medium">Fuerza</span>
           </div>
-          <p className="text-7xl font-bold">X</p>
-          <p className="text-xs text-gray-100 mt-1">Cantidad de sesiones</p>
+          <p className="text-3xl font-bold">8</p>
+          <p className="text-xs text-pink-100 mt-1">Sesiones esta semana</p>
         </CardContent>
       </Card>
     </div>
@@ -183,27 +184,57 @@ export default async function ExercisesPage() {
   const initialGoals = {
     durationGoal: progress.goal,
   };
-//Usando tailwind, que valor debo añadirle al contenedor principal para que ocupe todo el ancho disponible?
-//D
+
   return (
-    <div className="space-y-4">
-      {/* Header con saludo */}
-      <div className="flex justify-between items-start">
-        <div>
-          <h1 className="text-[48px] font-bold text-gray-900">Dashboard de Ejercicios</h1>
-          <p className="text-gray-600 mt-1">Allive - Tracker</p>
-        </div>
-        <Card className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white border-0 shadow-lg w-90 h-30">
-          <CardContent className="p-4 grid grid-cols-3 justify-items-center items-center gap-4">
-            <div > <Zap className='w-12 h-12'/></div>
-            <div className="flex items-center justify-between col-span-2">
-              <div >
-                <h3 className="font-bold text-lg">Hora de Entrenar!</h3>
-                <p className="text-sm opacity-90">Lo estas haciendo muy bien</p>
+    <div className="space-y-6">
+      {/* Hero Section para ejercicios */}
+      <div className="bg-gradient-to-r from-pink-700 to-indigo-700 rounded-3xl p-8 text-white relative overflow-visible max-h-[350px] flex items-center">
+        <div className="relative z-10 w-full">
+          <div className="flex justify-between items-center">
+            <div className="max-w-2xl">
+              <div className="flex items-center gap-2 mb-4">
+                <Sparkles className="h-6 w-6 text-indigo-300" />
+                <span className="text-lg font-semibold text-blue-100">FitTracker</span>
+              </div>
+              
+              <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
+                Transforma Tu 
+                <span className="block text-indigo-300">Cuerpo</span>
+              </h1>
+              <p className='text-white'>
+                El ejercicio regular fortalece tu corazón, mejora la circulación y aumenta la resistencia. 
+                Además, libera endorfinas que mejoran tu estado de ánimo y reducen el estrés.
+              </p>
+            </div>
+            
+            {/* Imagen más grande que sobresale del hero */}
+            <div className="hidden lg:block relative">
+              <div className="w-[1080px] h-[620px] relative top-2 -right-30">
+                {/* Efecto de brillo detrás de la imagen */}
+                <div className="absolute -inset-4 rounded-full blur-xl"></div>
+                
+                {/* Contenedor de la imagen con animación de entrada desde abajo */}
+                <div className="relative w-full h-full rounded-2xl p-4 animate-slide-up">
+                  <Image
+                    src="/hero-exc.png" // Cambia por tu imagen de ejercicios
+                    alt="Pesas Romanas"
+                    width={1080}
+                    height={700}
+                    className="w-full h-full object-contain drop-shadow-2xl"
+                    priority
+                  />
+                </div>
+                
+                {/* Elementos decorativos flotantes */}
+                <div className="absolute top-30 right-34 w-6 h-6 bg-purple-400 rounded-full animate-pulse"></div>
+                <div className="absolute top-34 right-30 w-4 h-4 bg-blue-300 rounded-full animate-pulse delay-1000"></div>
+                <div className="absolute bottom-42 right-46 w-5 h-5 bg-red-400 rounded-full animate-pulse delay-500"></div>
+                <div className="absolute bottom-42 left-38 w-4 h-4 bg-pink-600 rounded-full animate-pulse delay-700"></div>
+                <div className="absolute bottom-46 left-46 w-3 h-3 bg-red-300 rounded-full animate-pulse delay-300"></div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
       {/* Grid principal */}
@@ -218,8 +249,8 @@ export default async function ExercisesPage() {
 
           {/* Formulario para agregar ejercicio */}
           <AddExerciseForm />
-          <div className="grid grid-cols-2 gap-6">
 
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Ejercicios rápidos */}
             <QuickExercises />
               
