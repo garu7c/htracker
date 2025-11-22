@@ -13,27 +13,27 @@ export const dynamic = 'force-dynamic';
 const HydrationHistory = ({ entries }: { entries: any[] }) => {
   return (
     <Card className="shadow-lg border border-gray-200 bg-white/80 backdrop-blur-sm h-full">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-lg font-bold flex items-center gap-2 text-blue-700">
-          <Clock className="h-5 w-5" /> Historial de Hoy
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-bold flex items-center gap-2 text-blue-700">
+          <Clock className="h-4 w-4" /> Historial de Hoy
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-2">
         {(!entries || entries.length === 0) ? (
-          <p className="text-gray-500 italic p-3 rounded-md bg-gray-50/70 text-center">
+          <p className="text-gray-500 italic p-2 rounded-md bg-gray-50/70 text-center text-xs">
             Aún no hay registros de hidratación hoy.
           </p>
         ) : (
-          <ul className="space-y-3">
+          <ul className="space-y-2">
             {entries.slice(0, 5).map((entry, index) => (
               <li
                 key={index}
-                className="flex justify-between items-center p-3 rounded-xl border border-gray-200 bg-white/90 hover:bg-blue-50/80 transition-all duration-200"
+                className="flex justify-between items-center p-2 rounded-lg border border-gray-200 bg-white/90 hover:bg-blue-50/80 transition-all duration-200"
               >
-                <div className="flex items-center gap-3">
-                  <Droplets className="h-5 w-5 text-blue-600" />
+                <div className="flex items-center gap-2">
+                  <Droplets className="h-4 w-4 text-blue-600" />
                   <div>
-                    <p className="font-semibold text-gray-800 text-sm">{entry.amount} ml</p>
+                    <p className="font-semibold text-xs text-gray-800">{entry.amount} ml</p>
                     <p className="text-xs text-gray-500">
                       {new Date(entry.timestamp).toLocaleTimeString('es-ES', {
                         hour: '2-digit',
@@ -42,9 +42,8 @@ const HydrationHistory = ({ entries }: { entries: any[] }) => {
                     </p>
                   </div>
                 </div>
-                <Badge className="bg-blue-100 text-blue-700 text-xs">
-                  {entry.type || 'Agua'}
-                </Badge>
+
+                <Badge className="bg-blue-100 text-blue-700 text-xs">{entry.type || 'Agua'}</Badge>
               </li>
             ))}
           </ul>
@@ -60,23 +59,23 @@ const ProgressDisplay = ({ progress }: { progress: any }) => {
   const progressPercentage = Math.min(100, (current / goal) * 100);
 
   return (
-    <Card className="shadow-lg border border-blue-200 bg-white/80 backdrop-blur-sm h-54">
-      <CardHeader>
-        <CardTitle className="text-lg font-bold text-blue-800 flex items-center gap-2">
-          <Award className="h-5 w-5" /> Progreso de Hidratación
+    <Card className="shadow-lg border border-blue-200 bg-white/80 backdrop-blur-sm">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-bold text-blue-800 flex items-center gap-2">
+          <Award className="h-4 w-4" /> Progreso de Hidratación
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-3">
         <div className="flex justify-between items-center">
           <div className="flex items-baseline gap-1">
-            <span className="text-3xl font-extrabold text-blue-900">{current}</span>
-            <span className="text-sm font-normal text-blue-700">
+            <span className="text-2xl font-extrabold text-blue-900">{current}</span>
+            <span className="text-xs font-normal text-blue-700">
               / {goal} vasos
             </span>
           </div>
-          <div className="text-right p-2 rounded-lg bg-white border border-cyan-200">
+          <div className="text-right p-1 rounded-lg bg-white border border-cyan-200">
             <p className="text-xs font-medium text-cyan-600">Hoy</p>
-            <span className="text-lg font-bold text-cyan-700">{progress.streak || 0}</span>
+            <span className="text-sm font-bold text-cyan-700">{progress.streak || 0}</span>
           </div>
         </div>
         <Progress
@@ -184,22 +183,22 @@ export default async function HydrationPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Hero Section para hidratación */}
-      <div className="bg-gradient-to-r from-blue-600 to-cyan-500 rounded-3xl p-8 text-white relative overflow-visible max-h-[350px] flex items-center">
+      <div className="bg-gradient-to-r from-blue-600 to-cyan-500 rounded-2xl p-5 text-white relative overflow-visible max-h-[280px] flex items-center">
         <div className="relative z-10 w-full">
           <div className="flex justify-between items-center">
             <div className="max-w-2xl">
-              <div className="flex items-center gap-2 mb-4">
-                <Sparkles className="h-6 w-6 text-white" />
-                <span className="text-sm font-semibold text-cyan-100">HydroTracker</span>
+              <div className="flex items-center gap-2 mb-3">
+                <Sparkles className="h-5 w-5 text-white" />
+                <span className="text-xs font-semibold text-cyan-100">HydroTracker</span>
               </div>
               
-              <h1 className="text-4xl text-cyan-200 md:text-5xl font-bold mb-4 leading-tight">
+              <h1 className="text-3xl text-cyan-200 md:text-4xl font-bold mb-3 leading-tight">
                 Manten Tu Cuerpo
                 <span className="block text-white">Hidratado</span>
               </h1>
-              <p className='text-cyan-100 text-sm'>
+              <p className='text-cyan-100 text-xs'>
                 La hidratación adecuada es esencial para todas las funciones corporales. 
                 Mejora la digestión, regula la temperatura corporal, lubrica las articulaciones y ayuda a transportar nutrientes.
               </p>
@@ -207,7 +206,7 @@ export default async function HydrationPage() {
             
             {/* Imagen más grande que sobresale del hero */}
             <div className="hidden lg:block relative">
-              <div className="w-[500px] h-[450px] relative -top-8 -right-10">
+              <div className="w-[400px] h-[360px] relative -top-8 -right-10">
                 {/* Efecto de brillo detrás de la imagen */}
                 <div className="absolute -inset-4 bg-yellow-200/20 rounded-full blur-xl"></div>
                 
@@ -216,8 +215,8 @@ export default async function HydrationPage() {
                   <Image
                     src="/hero-hy.png" // Cambia por tu imagen de hidratación
                     alt="Persona hidratándose saludablemente"
-                    width={700}
-                    height={600}
+                    width={560}
+                    height={480}
                     className="w-full h-full object-contain drop-shadow-2xl"
                     priority
                   />
@@ -236,11 +235,11 @@ export default async function HydrationPage() {
       </div>
 
       {/* Grid principal */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Columna izquierda - más ancha */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-4">
           {/* Progreso y estadísticas de hidratación */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <ProgressDisplay progress={progress} />
             <HydrationStats progress={progress} />
           </div>
@@ -248,7 +247,7 @@ export default async function HydrationPage() {
           {/* Formulario para agregar hidratación */}
           <AddHydrationForm />
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Consejos de hidratación */}
             <HydrationTips />
             
@@ -258,7 +257,7 @@ export default async function HydrationPage() {
         </div>
 
         {/* Columna derecha - más estrecha */}
-        <div className="space-y-6">
+        <div className="space-y-4">
           <HydrationHistory entries={history || []} />
         </div>
       </div>

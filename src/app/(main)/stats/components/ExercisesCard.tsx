@@ -102,35 +102,35 @@ export default function ExercisesCard({ userId }: { userId: string }) {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-blue-600" />
+            <CardTitle className="flex items-center gap-2 text-sm">
+              <TrendingUp className="h-4 w-4 text-blue-600" />
               Ejercicio
             </CardTitle>
-            <CardDescription>Progreso de hoy</CardDescription>
+            <CardDescription className="text-xs">Progreso de hoy</CardDescription>
           </div>
           <div className="text-right">
-            <p className="text-3xl font-bold text-blue-600">{Math.round(progressPercent)}%</p>
+            <p className="text-2xl font-bold text-blue-600">{Math.round(progressPercent)}%</p>
             <p className="text-xs text-gray-500">completado</p>
           </div>
         </div>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-3">
         <div className="space-y-2">
-          <div className="flex justify-between text-sm">
+          <div className="flex justify-between text-xs">
             <span className="text-gray-600">{stats.progress.current} / {stats.progress.goal} min</span>
           </div>
-          <Progress value={progressPercent} className="h-3" />
+          <Progress value={progressPercent} className="h-2" />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-blue-50 p-4 rounded-lg">
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-blue-50 p-2 rounded-lg">
             <p className="text-xs text-gray-600 mb-1">Racha</p>
-            <p className="text-2xl font-bold text-blue-600">{stats.progress.streak}</p>
+            <p className="text-lg font-bold text-blue-600">{stats.progress.streak}</p>
             <p className="text-xs text-gray-500">días</p>
           </div>
-          <div className="bg-blue-50 p-4 rounded-lg">
+          <div className="bg-blue-50 p-2 rounded-lg">
             <p className="text-xs text-gray-600 mb-1">Promedio semanal</p>
-            <p className="text-2xl font-bold text-blue-600">{stats.averagePerSession}</p>
+            <p className="text-lg font-bold text-blue-600">{stats.averagePerSession}</p>
             <p className="text-xs text-gray-500">min/sesión</p>
           </div>
         </div>

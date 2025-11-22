@@ -71,7 +71,7 @@ export default function ExerciseAreaChart({ userId }: { userId: string }) {
   }
 
   const maxMinutes = Math.max(...data.map((d) => d.minutes), 30);
-  const chartHeight = 200;
+  const chartHeight = 160;
 
   // Calcular puntos para el SVG con mejor escalado
   const points = data.map((d, i) => {
@@ -86,11 +86,11 @@ export default function ExerciseAreaChart({ userId }: { userId: string }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Ejercicio Semanal</CardTitle>
-        <CardDescription>Últimos 7 días</CardDescription>
+        <CardTitle className="text-sm">Ejercicio Semanal</CardTitle>
+        <CardDescription className="text-xs">Últimos 7 días</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
+        <div className="space-y-3">
           <div style={{ height: chartHeight }}>
             <svg
               viewBox="0 0 100 100"
@@ -124,7 +124,7 @@ export default function ExerciseAreaChart({ userId }: { userId: string }) {
                   key={i}
                   cx={p.x}
                   cy={p.y}
-                  r="1.5"
+                  r="1"
                   fill="#3b82f6"
                 />
               ))}
@@ -134,9 +134,9 @@ export default function ExerciseAreaChart({ userId }: { userId: string }) {
           {/* Leyenda con valores */}
           <div className="grid grid-cols-7 gap-2 text-center text-xs">
             {data.map((d, i) => (
-              <div key={i} className="bg-blue-50 p-2 rounded">
-                <p className="font-semibold text-gray-700">{d.day}</p>
-                <p className="text-blue-600 font-bold">{d.minutes}m</p>
+              <div key={i} className="bg-blue-50 p-1 rounded">
+                <p className="text-xs font-semibold text-gray-700">{d.day}</p>
+                <p className="text-xs text-blue-600 font-bold">{d.minutes}m</p>
               </div>
             ))}
           </div>

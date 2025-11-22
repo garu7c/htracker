@@ -13,58 +13,46 @@ import Image from 'next/image';
 export const dynamic = 'force-dynamic';
 
 const SleepHistory = ({ entries }: { entries: SleepEntry[] }) => {
-  const getQualityColor = (quality: string) => {
-    const q = quality.toLowerCase();
-    if (q === 'excelente') return 'bg-green-500 text-white';
-    if (q === 'buena') return 'bg-blue-500 text-white';
-    if (q === 'regular') return 'bg-yellow-500 text-gray-900';
-    return 'bg-red-500 text-white';
-  };
-
   const todayString = new Date().toISOString().split('T')[0];
 
   return (
     <Card className="shadow-lg border border-gray-200 bg-white/80 backdrop-blur-sm h-full">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-lg font-bold flex items-center gap-2 text-purple-700">
-          <Clock className="h-5 w-5" /> Historial de Sueño
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-bold flex items-center gap-2 text-purple-700">
+          <Clock className="h-4 w-4" /> Historial de Sueño
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-2">
         {entries.length === 0 ? (
-          <p className="text-gray-500 italic p-3 rounded-md bg-gray-50/70 text-center">
+          <p className="text-gray-500 italic p-2 rounded-md bg-gray-50/70 text-center text-xs">
             Aún no hay períodos de sueño registrados.
           </p>
         ) : (
-          <ul className="space-y-3">
-            {entries.map((entry) => (
+          <ul className="space-y-2">
+            {entries.map((entry, idx) => (
               <li
-                key={entry.id}
-                className="flex justify-between items-center p-3 rounded-xl border border-gray-200 bg-white/90 hover:bg-purple-50/80 transition-all duration-200"
+                key={idx}
+                className="flex justify-between items-center p-2 rounded-lg border border-gray-200 bg-white/90 hover:bg-purple-50/80 transition-all duration-200"
               >
-                <div className="flex items-center gap-3">
-                  <Moon className="h-5 w-5 text-purple-600" />
+                <div className="flex items-center gap-2">
+                  <Moon className="h-4 w-4 text-purple-600" />
                   <div>
-                    <p className="font-semibold text-gray-800 text-sm">
+                    <p className='font-semibold text-xs'>
                       {entry.sleep_date === todayString ? 'Hoy' : new Date(entry.sleep_date).toLocaleDateString('es-ES', {
                         day: 'numeric',
                         month: 'short',
                       })}
                     </p>
-                    <p className="text-xs text-gray-500">
-                      {entry.time_sleep} - {entry.time_wake}
-                    </p>
+                    <p className="text-xs text-gray-500">{entry.time_sleep} - {entry.time_wake}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center text-sm font-medium text-gray-600">
-                    <Clock className="h-4 w-4 mr-1 text-gray-500" />
+
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center text-xs font-medium text-gray-600">
+                    <Clock className="h-3 w-3 mr-1 text-gray-500" />
                     <span className="font-bold">{entry.total_hours}h</span>
                   </div>
-                  <Badge
-                    variant="default"
-                    className={`text-xs capitalize font-medium ${getQualityColor(entry.quality)}`}
-                  >
+                  <Badge className="bg-purple-100 text-purple-700 text-xs">
                     <Star className="h-3 w-3 mr-1" />
                     {entry.quality}
                   </Badge>
@@ -84,23 +72,23 @@ const ProgressDisplay = ({ progress }: { progress: DailySleepProgress }) => {
   const progressPercentage = Math.min(100, (currentHours / goalHours) * 100);
 
   return (
-    <Card className="h-54 shadow-lg border border-purple-200 bg-white/80 backdrop-blur-sm">
+    <Card className="shadow-lg border border-purple-200 bg-white/80 backdrop-blur-sm">
       <CardHeader>
-        <CardTitle className="text-lg font-bold text-purple-800 flex items-center gap-2">
-          <Target className="h-5 w-5" /> Progreso del Sueño
+        <CardTitle className="text-sm font-bold text-purple-800 flex items-center gap-2">
+          <Target className="h-4 w-4" /> Progreso del Sueño
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex justify-between items-center">
           <div className="flex items-baseline gap-1">
-            <span className="text-3xl font-extrabold text-purple-900">{currentHours}</span>
+            <span className="text-2xl font-extrabold text-purple-900">{currentHours}</span>
             <span className="text-sm font-normal text-purple-700">
               / {goalHours} horas
             </span>
           </div>
           <div className="text-right p-2 rounded-lg bg-white border border-orange-200">
             <p className="text-xs font-medium text-orange-600">Racha</p>
-            <span className="text-lg font-bold text-orange-700">{progress.streak} días</span>
+            <span className="text-sm font-bold text-orange-700">{progress.streak} días</span>
           </div>
         </div>
         <Progress
@@ -121,23 +109,23 @@ const SleepStats = () => {
   return (
     <div className="grid grid-cols-2 gap-2">
       <Card className="bg-gradient-to-b from-purple-400 to-purple-600 backdrop-blur-sm border border-gray-200 text-white">
-        <CardContent className="p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <Bed className="h-4 w-4 text-white" />
-            <span className="text-sm font-medium">Sueño Profundo</span>
+        <CardContent className="p-3">
+          <div className="flex items-center gap-2 mb-1">
+            <Bed className="h-3 w-3 text-white" />
+            <span className="text-xs font-medium">Sueño Profundo</span>
           </div>
-          <p className="text-3xl font-bold">2.5h</p>
+          <p className="text-2xl font-bold">2.5h</p>
           <p className="text-xs text-purple-100 mt-1">Promedio diario</p>
         </CardContent>
       </Card>
       
       <Card className="bg-gradient-to-t from-indigo-500 to-purple-500 backdrop-blur-sm border border-gray-200 text-white">
-        <CardContent className="p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <Zap className="h-4 w-4 text-white" />
-            <span className="text-sm font-medium">Calidad</span>
+        <CardContent className="p-3">
+          <div className="flex items-center gap-2 mb-1">
+            <Zap className="h-3 w-3 text-white" />
+            <span className="text-xs font-medium">Calidad</span>
           </div>
-          <p className="text-3xl font-bold">85%</p>
+          <p className="text-2xl font-bold">85%</p>
           <p className="text-xs text-purple-100 mt-1">Esta semana</p>
         </CardContent>
       </Card>
@@ -172,17 +160,17 @@ const SleepRoutines = () => {
 
   return (
     <Card className="bg-white/80 backdrop-blur-sm border border-gray-200">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-lg font-bold text-purple-800 flex items-center gap-2">
-          <CircleCheckBig className='h-5 w-5'/>Rutinas para Dormir</CardTitle>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-bold text-purple-800 flex items-center gap-2">
+          <CircleCheckBig className='h-4 w-4'/>Rutinas para Dormir</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-2">
         {routines.map((routine, index) => (
-          <div key={index} className="flex items-center justify-between p-3 rounded-lg border border-gray-200 bg-white">
-            <div className="flex items-center gap-3">
-              <span className="text-xl">{routine.emoji}</span>
+          <div key={index} className="flex items-center justify-between p-2 rounded-lg border border-gray-200 bg-white">
+            <div className="flex items-center gap-2">
+              <span className="text-lg">{routine.emoji}</span>
               <div>
-                <p className="font-semibold text-sm">{routine.name}</p>
+                <p className="font-semibold text-xs">{routine.name}</p>
                 <p className="text-xs text-gray-500">{routine.duration} • {routine.level}</p>
               </div>
             </div>
@@ -206,22 +194,22 @@ export default async function SleepPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Hero Section para sueño */}
-      <div className="bg-gradient-to-r from-purple-800 to-indigo-700 rounded-3xl p-8 text-white relative overflow-visible max-h-[350px] flex items-center">
+      <div className="bg-gradient-to-r from-purple-800 to-indigo-700 rounded-2xl p-5 text-white relative overflow-visible max-h-[280px] flex items-center">
         <div className="relative z-10 w-full">
           <div className="flex justify-between items-center">
             <div className="max-w-2xl">
-              <div className="flex items-center gap-2 mb-4">
-                <Sparkles className="h-6 w-6 text-indigo-500" />
-                <span className="text-sm font-semibold text-indigo-100">SleepTracker</span>
+              <div className="flex items-center gap-2 mb-3">
+                <Sparkles className="h-5 w-5 text-indigo-500" />
+                <span className="text-xs font-semibold text-indigo-100">SleepTracker</span>
               </div>
               
-              <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
+              <h1 className="text-3xl md:text-4xl font-bold mb-3 leading-tight">
                 Duerme Lo 
                 <span className="block text-indigo-500">Suficiente</span>
               </h1>
-              <p className='text-white text-sm'>
+              <p className='text-white text-xs'>
                 Un sueño de calidad es fundamental para la salud física y mental. 
                 Mejora la memoria, fortalece el sistema inmunológico y renueva tu energía para el día siguiente.
               </p>
@@ -229,7 +217,7 @@ export default async function SleepPage() {
             
             {/* Imagen más grande que sobresale del hero */}
             <div className="hidden lg:block relative">
-              <div className="w-[580px] h-[600px] relative -top-12 -right-10">
+              <div className="w-[464px] h-[480px] relative -top-12 -right-10">
                 {/* Efecto de brillo detrás de la imagen */}
                 <div className="absolute -inset-4 rounded-full blur-xl"></div>
                 
@@ -238,8 +226,8 @@ export default async function SleepPage() {
                   <Image
                     src="/hero-sleep.png" // Cambia por tu imagen de sueño
                     alt="Persona durmiendo tranquilamente"
-                    width={700}
-                    height={600}
+                    width={560}
+                    height={480}
                     className="w-full h-full object-contain drop-shadow-2xl"
                     priority
                   />
@@ -257,11 +245,11 @@ export default async function SleepPage() {
       </div>
 
       {/* Grid principal */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Columna izquierda - más ancha */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-4">
           {/* Progreso y estadísticas de sueño */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <ProgressDisplay progress={progress} />
             <SleepStats />
           </div>
@@ -269,7 +257,7 @@ export default async function SleepPage() {
           {/* Formulario para agregar sueño */}
           <AddSleepForm />
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Rutinas para dormir */}
             <SleepRoutines />
             
@@ -282,7 +270,7 @@ export default async function SleepPage() {
         </div>
 
         {/* Columna derecha - más estrecha */}
-        <div className="space-y-6">
+        <div className="space-y-4">
           <SleepHistory entries={history} />
         </div>
       </div>

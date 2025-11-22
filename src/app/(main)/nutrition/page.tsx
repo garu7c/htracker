@@ -22,27 +22,27 @@ const HistorialComidas = ({ entries }: { entries: any[] }) => {
 
   return (
     <Card className="shadow-lg border border-gray-200 bg-white/80 backdrop-blur-sm h-full">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-lg font-bold flex items-center gap-2 text-green-700">
-          <Clock className="h-5 w-5" /> Historial de Hoy
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-bold flex items-center gap-2 text-green-700">
+          <Clock className="h-4 w-4" /> Historial de Hoy
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-2">
         {entries.length === 0 ? (
-          <p className="text-gray-500 italic p-3 rounded-md bg-gray-50/70 text-center">
+          <p className="text-gray-500 italic p-2 rounded-md bg-gray-50/70 text-center text-xs">
             Aún no hay comidas registradas.
           </p>
         ) : (
-          <ul className="space-y-3">
+          <ul className="space-y-2">
             {entries.map((entry, idx) => (
               <li
                 key={idx}
-                className="flex justify-between items-center p-3 rounded-xl border border-gray-200 bg-white/90 hover:bg-green-50/80 transition-all duration-200"
+                className="flex justify-between items-center p-2 rounded-lg border border-gray-200 bg-white/90 hover:bg-green-50/80 transition-all duration-200"
               >
-                <div className="flex items-center gap-3">
-                  <span className="text-xl">{emojiFor(entry.meal_type)}</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">{emojiFor(entry.meal_type)}</span>
                   <div>
-                    <p className="font-semibold text-gray-800 text-sm capitalize">{entry.meal_type}</p>
+                    <p className="font-semibold text-gray-800 text-xs capitalize">{entry.meal_type}</p>
                     <p className="text-xs text-gray-500">{entry.description}</p>
                   </div>
                 </div>
@@ -72,10 +72,10 @@ const ProgressDisplay = ({ progress }: { progress: any }) => {
   const progressPercentage = Math.min(100, (current / goal) * 100);
 
   return (
-    <Card className="h-54 shadow-lg border border-green-200 bg-white/80 backdrop-blur-sm">
-      <CardHeader >
-        <CardTitle className="text-lg font-bold text-green-800 flex items-center gap-2">
-          <Award className="h-5 w-5" /> Progreso Diario
+    <Card className="shadow-lg border border-green-200 bg-white/80 backdrop-blur-sm">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-bold text-green-800 flex items-center gap-2">
+          <Award className="h-4 w-4" /> Progreso Diario
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -109,23 +109,23 @@ const NutritionStats = () => {
   return (
     <div className="grid grid-cols-2 gap-2">
       <Card className="bg-gradient-to-b from-green-400 to-green-600 backdrop-blur-sm border border-gray-200 text-white">
-        <CardContent className="p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <Apple className="h-4 w-4 text-white" />
-            <span className="text-sm font-medium">Comidas Saludables</span>
+        <CardContent className="p-3">
+          <div className="flex items-center gap-2 mb-1">
+            <Apple className="h-3 w-3 text-white" />
+            <span className="text-xs font-medium">Comidas Saludables</span>
           </div>
-          <p className="text-3xl font-bold">5</p>
+          <p className="text-2xl font-bold">5</p>
           <p className="text-xs text-green-100 mt-1">Esta semana</p>
         </CardContent>
       </Card>
       
       <Card className="bg-gradient-to-t from-yellow-400 to-orange-500 backdrop-blur-sm border border-gray-200 text-white">
-        <CardContent className="p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <Carrot className="h-4 w-4 text-white" />
-            <span className="text-sm font-medium">Verduras Consumidas</span>
+        <CardContent className="p-3">
+          <div className="flex items-center gap-2 mb-1">
+            <Carrot className="h-3 w-3 text-white" />
+            <span className="text-xs font-medium">Verduras Consumidas</span>
           </div>
-          <p className="text-3xl font-bold">12</p>
+          <p className="text-2xl font-bold">12</p>
           <p className="text-xs text-orange-100 mt-1">Porciones hoy</p>
         </CardContent>
       </Card>
@@ -157,17 +157,17 @@ const NutritionTips = () => {
 
   return (
     <Card className="bg-white/80 backdrop-blur-sm border border-gray-200">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-lg font-bold text-green-800 flex items-center gap-2">
-          <Lightbulb className="h-5 w-5"/>Consejos de Nutrición</CardTitle>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-bold text-green-800 flex items-center gap-2">
+          <Lightbulb className="h-4 w-4"/>Consejos de Nutrición</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-2">
         {tips.map((tip, index) => (
-          <div key={index} className="flex items-center justify-between p-3 rounded-lg border border-gray-200 bg-white">
-            <div className="flex items-center gap-3">
-              <span className="text-xl">{tip.emoji}</span>
+          <div key={index} className="flex items-center justify-between p-2 rounded-lg border border-gray-200 bg-white">
+            <div className="flex items-center gap-2">
+              <span className="text-lg">{tip.emoji}</span>
               <div>
-                <p className="font-semibold text-sm">{tip.title}</p>
+                <p className="font-semibold text-xs">{tip.title}</p>
                 <p className="text-xs text-gray-500">{tip.description}</p>
               </div>
             </div>
@@ -194,26 +194,26 @@ export default async function NutritionPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Hero Section con imagen más grande que sobresale */}
-      <div className="bg-gradient-to-r from-emerald-500 to-green-600 rounded-3xl p-8 text-white relative overflow-visible max-h-[350px] flex items-center">
+      <div className="bg-gradient-to-r from-emerald-500 to-green-600 rounded-2xl p-5 text-white relative overflow-visible max-h-[280px] flex items-center">
         <div className="relative z-10 w-full">
           <div className="flex justify-between items-center">
             <div className="max-w-2xl">
-              <div className="flex items-center gap-2 mb-4">
-                <Sparkles className="h-6 w-6 text-yellow-400" />
-                <span className="text-sm font-semibold text-green-100">NutriTracker</span>
+              <div className="flex items-center gap-2 mb-3">
+                <Sparkles className="h-5 w-5 text-yellow-400" />
+                <span className="text-xs font-semibold text-green-100">NutriTracker</span>
               </div>
               
-              <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
+              <h1 className="text-3xl md:text-4xl font-bold mb-3 leading-tight">
                 Cuida Tu 
                 <span className="block text-yellow-400">Alimentación</span>
               </h1>
-              <p className='text-white text-sm'>Una dieta saludable proporciona al cuerpo los nutrientes necesarios para funcionar correctamente, mantiene un peso adecuado y ayuda a prevenir enfermedades crónicas</p>
+              <p className='text-white text-xs'>Una dieta saludable proporciona al cuerpo los nutrientes necesarios para funcionar correctamente, mantiene un peso adecuado y ayuda a prevenir enfermedades crónicas</p>
             </div>
             {/* Imagen más grande que sobresale del hero */}
             <div className="hidden lg:block relative">
-              <div className="w-[600px] h-[600px] relative -top-12 -right-10">
+              <div className="w-[480px] h-[480px] relative -top-12 -right-10">
                 {/* Efecto de brillo detrás de la imagen */}
                 <div className="absolute -inset-4 bg-yellow-200/20 rounded-full blur-xl"></div>
                 
@@ -222,8 +222,8 @@ export default async function NutritionPage() {
                   <Image
                     src="/hero-nutr.png"
                     alt="Comida saludable"
-                    width={700}
-                    height={600}
+                    width={560}
+                    height={480}
                     className="w-full h-full object-contain drop-shadow-2xl"
                     priority
                   />

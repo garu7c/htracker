@@ -72,27 +72,27 @@ export default function Calendar({ onDateSelect, selectedDate }: CalendarProps) 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Calendario</CardTitle>
-        <CardDescription>Selecciona un día para ver las actividades</CardDescription>
+        <CardTitle className="text-sm">Calendario</CardTitle>
+        <CardDescription className="text-xs">Selecciona un día para ver las actividades</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
+        <div className="space-y-3">
           {/* Navegación de meses */}
           <div className="flex items-center justify-between">
             <button
               onClick={previousMonth}
               className="p-1 hover:bg-gray-100 rounded"
             >
-              <ChevronLeft className="h-5 w-5" />
+              <ChevronLeft className="h-4 w-4" />
             </button>
-            <h3 className="font-semibold text-gray-900">
+            <h3 className="font-semibold text-gray-900 text-xs">
               {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
             </h3>
             <button
               onClick={nextMonth}
               className="p-1 hover:bg-gray-100 rounded"
             >
-              <ChevronRight className="h-5 w-5" />
+              <ChevronRight className="h-4 w-4" />
             </button>
           </div>
 
@@ -118,7 +118,7 @@ export default function Calendar({ onDateSelect, selectedDate }: CalendarProps) 
                   onClick={() => day && handleDateClick(day)}
                   disabled={!canSelect && day !== null}
                   className={`
-                    aspect-square rounded-lg text-xs font-medium transition-colors
+                    aspect-square rounded text-xs font-medium transition-colors
                     ${day === null ? 'invisible' : ''}
                     ${isSelected ? 'bg-blue-600 text-white' : ''}
                     ${isTodayDate && !isSelected ? 'bg-blue-100 text-blue-600 border-2 border-blue-600' : ''}
