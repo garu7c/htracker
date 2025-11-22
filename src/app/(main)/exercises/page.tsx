@@ -9,6 +9,8 @@ import ExerciseGoalsForm from './components/ExerciseGoalsForm';
 import { DailyProgress, ExerciseEntry } from '@/types/db'; 
 import Image from 'next/image';
 
+export const dynamic = 'force-dynamic';
+
 interface Entry extends ExerciseEntry {}
 
 const HistorialReciente = ({ entries }: { entries: Entry[] }) => {

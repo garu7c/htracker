@@ -8,6 +8,8 @@ import AddMealForm from './components/AddMealForm';
 import NutritionGoalsForm from './components/NutritionGoalsForm';
 import Image from 'next/image';
 
+export const dynamic = 'force-dynamic';
+
 const HistorialComidas = ({ entries }: { entries: any[] }) => {
   const emojiFor = (meal: string) => {
     const m = String(meal).toLowerCase();

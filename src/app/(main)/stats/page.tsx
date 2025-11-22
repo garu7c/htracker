@@ -12,6 +12,8 @@ import OverallRadialChart from './components/OverallRadialChart';
 import Calendar from './components/Calendar';
 import DayActivities from './components/DayActivities';
 
+export const dynamic = 'force-dynamic';
+
 export default function StatsPage() {
   const t = getTexts();
   const supabase = createClient();

@@ -8,6 +8,8 @@ import HydrationGoalsForm from './components/HydrationGoalsForm';
 import AddHydrationForm from './components/AddHydrationForm';
 import Image from 'next/image';
 
+export const dynamic = 'force-dynamic';
+
 const HydrationHistory = ({ entries }: { entries: any[] }) => {
   return (
     <Card className="shadow-lg border border-gray-200 bg-white/80 backdrop-blur-sm h-full">

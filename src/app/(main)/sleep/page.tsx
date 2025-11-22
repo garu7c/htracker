@@ -10,6 +10,8 @@ import SleepGoalsForm from './components/SleepGoalsForm';
 import SleepTips from './components/SleepTips';
 import Image from 'next/image';
 
+export const dynamic = 'force-dynamic';
+
 const SleepHistory = ({ entries }: { entries: SleepEntry[] }) => {
   const getQualityColor = (quality: string) => {
     const q = quality.toLowerCase();
