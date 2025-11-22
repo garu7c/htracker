@@ -127,35 +127,35 @@ export default function SleepCard({ userId }: { userId: string }) {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="flex items-center gap-2">
-              <Moon className="h-5 w-5 text-purple-600" />
+            <CardTitle className="flex items-center gap-2 text-sm">
+              <Moon className="h-4 w-4 text-purple-600" />
               Sueño
             </CardTitle>
-            <CardDescription>Horas de sueño</CardDescription>
+            <CardDescription className="text-xs">Horas de sueño</CardDescription>
           </div>
           <div className="text-right">
-            <p className="text-3xl font-bold text-purple-600">{Math.round(progressPercent)}%</p>
+            <p className="text-2xl font-bold text-purple-600">{Math.round(progressPercent)}%</p>
             <p className="text-xs text-gray-500">completado</p>
           </div>
         </div>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-3">
         <div className="space-y-2">
-          <div className="flex justify-between text-sm">
+          <div className="flex justify-between text-xs">
             <span className="text-gray-600">{stats.current.toFixed(1)} / {stats.goal} h</span>
           </div>
-          <Progress value={progressPercent} className="h-3" />
+          <Progress value={progressPercent} className="h-2" />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-purple-50 p-4 rounded-lg">
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-purple-50 p-2 rounded-lg">
             <p className="text-xs text-gray-600 mb-1">Racha</p>
-            <p className="text-2xl font-bold text-purple-600">{stats.streak}</p>
+            <p className="text-lg font-bold text-purple-600">{stats.streak}</p>
             <p className="text-xs text-gray-500">días</p>
           </div>
-          <div className={`p-4 rounded-lg ${qualityColor}`}>
+          <div className={`p-2 rounded-lg ${qualityColor}`}>
             <p className="text-xs text-gray-600 mb-1">Calidad</p>
-            <p className="text-lg font-bold capitalize">{stats.quality}</p>
+            <p className="text-sm font-bold capitalize">{stats.quality}</p>
           </div>
         </div>
       </CardContent>

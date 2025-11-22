@@ -148,10 +148,10 @@ export default function OverallRadialChart({ userId }: { userId: string }) {
             <circle
               cx="100"
               cy="100"
-              r="45"
+              r="35"
               fill="none"
               stroke="#3b82f6"
-              strokeWidth="12"
+              strokeWidth="8"
               strokeDasharray={`${(stats.exercise / 100) * circumference} ${circumference}`}
               strokeDashoffset="0"
               strokeLinecap="round"
@@ -162,10 +162,10 @@ export default function OverallRadialChart({ userId }: { userId: string }) {
             <circle
               cx="100"
               cy="100"
-              r="45"
+              r="35"
               fill="none"
               stroke="#06b6d4"
-              strokeWidth="12"
+              strokeWidth="8"
               strokeDasharray={`${(stats.hydration / 100) * circumference} ${circumference}`}
               strokeDashoffset={`-${(stats.exercise / 100) * circumference}`}
               strokeLinecap="round"
@@ -176,10 +176,10 @@ export default function OverallRadialChart({ userId }: { userId: string }) {
             <circle
               cx="100"
               cy="100"
-              r="45"
+              r="35"
               fill="none"
               stroke="#a855f7"
-              strokeWidth="12"
+              strokeWidth="8"
               strokeDasharray={`${(stats.sleep / 100) * circumference} ${circumference}`}
               strokeDashoffset={`-${((stats.exercise + stats.hydration) / 100) * circumference}`}
               strokeLinecap="round"
@@ -190,10 +190,10 @@ export default function OverallRadialChart({ userId }: { userId: string }) {
             <circle
               cx="100"
               cy="100"
-              r="45"
+              r="35"
               fill="none"
               stroke="#f59e0b"
-              strokeWidth="12"
+              strokeWidth="8"
               strokeDasharray={`${(stats.nutrition / 100) * circumference} ${circumference}`}
               strokeDashoffset={`-${((stats.exercise + stats.hydration + stats.sleep) / 100) * circumference}`}
               strokeLinecap="round"
@@ -201,19 +201,19 @@ export default function OverallRadialChart({ userId }: { userId: string }) {
             />
 
             {/* Centro del donut */}
-            <circle cx="100" cy="100" r="30" fill="white" />
-            <text x="100" y="100" textAnchor="middle" dy="0.3em" className="text-sm font-bold fill-gray-900">
+            <circle cx="100" cy="100" r="22" fill="white" />
+            <text x="100" y="100" textAnchor="middle" dy="0.3em" className="text-xs font-bold fill-gray-900">
               {Math.round((stats.exercise + stats.hydration + stats.sleep + stats.nutrition) / 4)}%
             </text>
           </svg>
 
           {/* Leyenda */}
-          <div className="w-full space-y-2">
+          <div className="w-full space-y-1">
             {sections.map((section) => (
-              <div key={section.label} className="flex items-center justify-between text-sm">
+              <div key={section.label} className="flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2">
                   <div
-                    className="w-3 h-3 rounded-full"
+                    className="w-2 h-2 rounded-full"
                     style={{ backgroundColor: section.color }}
                   />
                   <span className="text-gray-700">{section.label}</span>

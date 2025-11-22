@@ -122,24 +122,24 @@ export default function DayActivities({ userId, selectedDate }: DayActivitiesPro
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Actividades</CardTitle>
-        <CardDescription className="capitalize">{formattedDate}</CardDescription>
+        <CardTitle className="text-sm">Actividades</CardTitle>
+        <CardDescription className="capitalize text-xs">{formattedDate}</CardDescription>
       </CardHeader>
       <CardContent>
         {!hasAnyActivity ? (
-          <p className="text-sm text-gray-500 text-center py-4">No hay actividades registradas para este día</p>
+          <p className="text-xs text-gray-500 text-center py-2">No hay actividades registradas para este día</p>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {/* Ejercicio */}
             {activities.exercise.length > 0 && (
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
-                  <Dumbbell className="h-4 w-4 text-blue-600" />
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-xs font-semibold text-gray-900">
+                  <Dumbbell className="h-3 w-3 text-blue-600" />
                   Ejercicio ({activities.exercise.length})
                 </div>
-                <div className="space-y-1 ml-6">
+                <div className="space-y-1 ml-5">
                   {activities.exercise.map((ex, idx) => (
-                    <div key={idx} className="text-sm text-gray-700 bg-blue-50 p-2 rounded">
+                    <div key={idx} className="text-xs text-gray-700 bg-blue-50 p-1 rounded">
                       <p className="font-medium">{ex.type}</p>
                       <p className="text-xs text-gray-600">{ex.duration}m - {ex.intensity}</p>
                     </div>
@@ -150,12 +150,12 @@ export default function DayActivities({ userId, selectedDate }: DayActivitiesPro
 
             {/* Hidratación */}
             {activities.hydration.length > 0 && (
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
-                  <Droplets className="h-4 w-4 text-cyan-600" />
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-xs font-semibold text-gray-900">
+                  <Droplets className="h-3 w-3 text-cyan-600" />
                   Hidratación
                 </div>
-                <div className="text-sm text-gray-700 bg-cyan-50 p-2 rounded ml-6">
+                <div className="text-xs text-gray-700 bg-cyan-50 p-1 rounded ml-5">
                   <p className="font-medium">{activities.hydration.length} vasos</p>
                 </div>
               </div>
@@ -163,12 +163,12 @@ export default function DayActivities({ userId, selectedDate }: DayActivitiesPro
 
             {/* Sueño */}
             {activities.sleep && (
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
-                  <Moon className="h-4 w-4 text-purple-600" />
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-xs font-semibold text-gray-900">
+                  <Moon className="h-3 w-3 text-purple-600" />
                   Sueño
                 </div>
-                <div className="text-sm text-gray-700 bg-purple-50 p-2 rounded ml-6">
+                <div className="text-xs text-gray-700 bg-purple-50 p-1 rounded ml-5">
                   <p className="font-medium">{activities.sleep.hours.toFixed(1)} horas</p>
                   <p className="text-xs text-gray-600 capitalize">Calidad: {activities.sleep.quality}</p>
                 </div>
@@ -177,16 +177,16 @@ export default function DayActivities({ userId, selectedDate }: DayActivitiesPro
 
             {/* Nutrición */}
             {activities.nutrition.length > 0 && (
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
-                  <Utensils className="h-4 w-4 text-amber-600" />
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-xs font-semibold text-gray-900">
+                  <Utensils className="h-3 w-3 text-amber-600" />
                   Nutrición ({activities.nutrition.length})
                 </div>
-                <div className="space-y-1 ml-6">
+                <div className="space-y-1 ml-5">
                   {activities.nutrition.map((nut, idx) => (
                     <div
                       key={idx}
-                      className={`text-sm p-2 rounded ${
+                      className={`text-xs p-1 rounded ${
                         nut.healthy ? 'bg-green-50 text-green-700' : 'bg-amber-50 text-amber-700'
                       }`}
                     >

@@ -112,33 +112,33 @@ export default function HydrationCard({ userId }: { userId: string }) {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="flex items-center gap-2">
-              <Droplets className="h-5 w-5 text-cyan-600" />
+            <CardTitle className="flex items-center gap-2 text-sm">
+              <Droplets className="h-4 w-4 text-cyan-600" />
               Hidratación
             </CardTitle>
-            <CardDescription>Vasos de agua</CardDescription>
+            <CardDescription className="text-xs">Vasos de agua</CardDescription>
           </div>
           <div className="text-right">
-            <p className="text-3xl font-bold text-cyan-600">{Math.round(progressPercent)}%</p>
+            <p className="text-2xl font-bold text-cyan-600">{Math.round(progressPercent)}%</p>
             <p className="text-xs text-gray-500">completado</p>
           </div>
         </div>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-3">
         <div className="space-y-2">
-          <div className="flex justify-between text-sm">
+          <div className="flex justify-between text-xs">
             <span className="text-gray-600">{stats.current} / {stats.goal} vasos</span>
           </div>
-          <Progress value={progressPercent} className="h-3" />
+          <Progress value={progressPercent} className="h-2" />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-cyan-50 p-4 rounded-lg">
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-cyan-50 p-2 rounded-lg">
             <p className="text-xs text-gray-600 mb-1">Racha</p>
-            <p className="text-2xl font-bold text-cyan-600">{stats.streak}</p>
+            <p className="text-lg font-bold text-cyan-600">{stats.streak}</p>
             <p className="text-xs text-gray-500">días</p>
           </div>
-          <div className="bg-cyan-50 p-4 rounded-lg">
+          <div className="bg-cyan-50 p-2 rounded-lg">
             <p className="text-xs text-gray-600 mb-1">Faltante</p>
             <p className="text-2xl font-bold text-cyan-600">{Math.max(0, stats.goal - stats.current)}</p>
             <p className="text-xs text-gray-500">vasos</p>

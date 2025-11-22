@@ -68,91 +68,91 @@ export default function StatsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50/30 p-6">
+    <div className="min-h-screen bg-gray-50/30 p-5">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">{t.pages.stats.title}</h1>
-        <p className="mt-2 text-gray-600 text-lg">{t.pages.stats.description}</p>
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-gray-900">{t.pages.stats.title}</h1>
+        <p className="mt-2 text-gray-600 text-sm">{t.pages.stats.description}</p>
       </div>
 
       {/* Main Grid Layout */}
-      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-4">
         {/* Left Column - Main Content (3/4 on xl screens) */}
-        <div className="xl:col-span-3 space-y-6">
+        <div className="xl:col-span-3 space-y-4">
           {/* Stats Overview Cards - Compact Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3 hover:shadow-md transition-shadow">
               <ExercisesCard userId={userId} />
             </div>
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3 hover:shadow-md transition-shadow">
               <HydrationCard userId={userId} />
             </div>
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3 hover:shadow-md transition-shadow">
               <SleepCard userId={userId} />
             </div>
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3 hover:shadow-md transition-shadow">
               <NutritionCard userId={userId} />
             </div>
           </div>
 
           {/* Charts Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {/* Area Chart - Takes 2/3 space */}
-            <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Exercise Progress</h3>
+            <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+              <h3 className="text-sm font-semibold text-gray-900 mb-3">Exercise Progress</h3>
               <ExerciseAreaChart userId={userId} />
             </div>
             
             {/* Radial Chart - Takes 1/3 space */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Overall Progress</h3>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+              <h3 className="text-sm font-semibold text-gray-900 mb-3">Overall Progress</h3>
               <OverallRadialChart userId={userId} />
             </div>
           </div>
 
           {/* Additional Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {/* Weekly Exercise */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4">
-              <h4 className="font-semibold text-gray-900 mb-2">Weekly Exercise</h4>
-              <p className="text-2xl font-bold text-blue-600">36 min</p>
-              <p className="text-sm text-gray-500">max this month</p>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3">
+              <h4 className="text-xs font-semibold text-gray-900 mb-1">Weekly Exercise</h4>
+              <p className="text-lg font-bold text-blue-600">36 min</p>
+              <p className="text-xs text-gray-500">max this month</p>
             </div>
             
             {/* Sleep Hours */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4">
-              <h4 className="font-semibold text-gray-900 mb-2">Sleep Hours</h4>
-              <p className="text-2xl font-bold text-purple-600">00 / 8h</p>
-              <p className="text-sm text-gray-500">today</p>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3">
+              <h4 className="text-xs font-semibold text-gray-900 mb-1">Sleep Hours--Preview</h4>
+              <p className="text-lg font-bold text-purple-600">00 / 8h</p>
+              <p className="text-xs text-gray-500">today</p>
             </div>
             
             {/* Water Intake */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4">
-              <h4 className="font-semibold text-gray-900 mb-2">Water Intake</h4>
-              <p className="text-2xl font-bold text-cyan-600">0 / 0</p>
-              <p className="text-sm text-gray-500">glasses today</p>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3">
+              <h4 className="text-xs font-semibold text-gray-900 mb-1">Water Intake</h4>
+              <p className="text-lg font-bold text-cyan-600">0 / 0</p>
+              <p className="text-xs text-gray-500">glasses today</p>
             </div>
           </div>
         </div>
 
         {/* Right Column - Sidebar (1/4 on xl screens) */}
-        <div className="xl:col-span-1 space-y-6">
+        <div className="xl:col-span-1 space-y-4">
           {/* Calendar */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Calendar</h3>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+            <h3 className="text-sm font-semibold text-gray-900 mb-3">Calendar</h3>
             <Calendar onDateSelect={setSelectedDate} selectedDate={selectedDate} />
           </div>
 
           {/* Day Activities */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Activities</h3>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+            <h3 className="text-sm font-semibold text-gray-900 mb-3">Activities</h3>
             <DayActivities userId={userId} selectedDate={selectedDate} />
           </div>
 
           {/* Quick Stats */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Today's Summary</h3>
-            <div className="space-y-3">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+            <h3 className="text-sm font-semibold text-gray-900 mb-3">Today's Summary</h3>
+            <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <span className="text-gray-600">Exercise Minutes</span>
                 <span className="font-semibold text-gray-900">60/30</span>

@@ -106,35 +106,35 @@ export default function NutritionCard({ userId }: { userId: string }) {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="flex items-center gap-2">
-              <Utensils className="h-5 w-5 text-amber-600" />
+            <CardTitle className="flex items-center gap-2 text-sm">
+              <Utensils className="h-4 w-4 text-amber-600" />
               Nutrición
             </CardTitle>
-            <CardDescription>Comidas saludables</CardDescription>
+            <CardDescription className="text-xs">Comidas saludables</CardDescription>
           </div>
           <div className="text-right">
-            <p className="text-3xl font-bold text-amber-600">{Math.round(progressPercent)}%</p>
+            <p className="text-2xl font-bold text-amber-600">{Math.round(progressPercent)}%</p>
             <p className="text-xs text-gray-500">completado</p>
           </div>
         </div>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-3">
         <div className="space-y-2">
-          <div className="flex justify-between text-sm">
+          <div className="flex justify-between text-xs">
             <span className="text-gray-600">{stats.healthyMeals} / {stats.totalMeals} comidas</span>
           </div>
-          <Progress value={progressPercent} className="h-3" />
+          <Progress value={progressPercent} className="h-2" />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-amber-50 p-4 rounded-lg">
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-amber-50 p-2 rounded-lg">
             <p className="text-xs text-gray-600 mb-1">Racha</p>
-            <p className="text-2xl font-bold text-amber-600">{stats.streak}</p>
+            <p className="text-lg font-bold text-amber-600">{stats.streak}</p>
             <p className="text-xs text-gray-500">días</p>
           </div>
-          <div className="bg-amber-50 p-4 rounded-lg">
+          <div className="bg-amber-50 p-2 rounded-lg">
             <p className="text-xs text-gray-600 mb-1">Total comidas</p>
-            <p className="text-2xl font-bold text-amber-600">{stats.totalMeals}</p>
+            <p className="text-lg font-bold text-amber-600">{stats.totalMeals}</p>
             <p className="text-xs text-gray-500">hoy</p>
           </div>
         </div>
