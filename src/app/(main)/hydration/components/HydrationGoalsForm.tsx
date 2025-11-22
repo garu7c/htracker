@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useRouter } from 'next/navigation';
-import { Target } from 'lucide-react';
+import { Target, Save } from 'lucide-react';
 
 export default function HydrationGoalsForm({ initial }: { initial: number }) {
   const [cupsPerDay, setCupsPerDay] = useState(String(initial ?? 8));
@@ -61,8 +61,8 @@ export default function HydrationGoalsForm({ initial }: { initial: number }) {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          <div className="space-y-3">
-            <Label className="text-sm font-medium">Vasos por día</Label>
+          <div className="space-y-8">
+            <Label className="text-sm font-medium text-blue-700">Vasos por día</Label>
             <Select value={cupsPerDay} onValueChange={setCupsPerDay}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Seleccionar meta" />
@@ -93,8 +93,8 @@ export default function HydrationGoalsForm({ initial }: { initial: number }) {
           <Button 
             onClick={handleSave} 
             disabled={loading} 
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-          >
+            className="w-32 bg-blue-600 hover:bg-blue-700 cursor-pointer text-white gap-2"
+          ><Save className='h-5 w-5'/>
             {loading ? (
               <>
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>

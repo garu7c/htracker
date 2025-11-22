@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Plus} from 'lucide-react';
 
 export default function AddMealForm() {
   const [loading, setLoading] = useState(false);
@@ -47,40 +48,43 @@ export default function AddMealForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Registrar Comida</CardTitle>
+        <CardTitle className="text-lg font-bold text-green-800 flex items-center gap-2">
+          <Plus className='h-5 w-5'/>Registrar Comida
+          </CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={onSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="meal-type">Tipo de Comida</Label>
+              <Label htmlFor="meal-type" className='text-green-800'>Tipo de Comida</Label>
               <Select value={mealType} onValueChange={setMealType} name="meal_type">
                 <SelectTrigger id="meal-type">
-                  <SelectValue placeholder="Seleccionar tipo" />
+                  <SelectValue placeholder="Seleccionar tipo" className='text-green-700'/>
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="desayuno">Desayuno</SelectItem>
-                  <SelectItem value="almuerzo">Almuerzo</SelectItem>
-                  <SelectItem value="cena">Cena</SelectItem>
-                  <SelectItem value="snack">Snack</SelectItem>
+                  <SelectItem value="desayuno"className='text-green-700'>Desayuno</SelectItem>
+                  <SelectItem value="almuerzo"className='text-green-700'>Almuerzo</SelectItem>
+                  <SelectItem value="cena"className='text-green-700'>Cena</SelectItem>
+                  <SelectItem value="snack"className='text-green-700'>Snack</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="description">Descripción</Label>
+              <Label htmlFor="description"className='text-green-800'>Descripción</Label>
               <Input id="description" name="description" placeholder="Ej: Ensalada con pollo" />
             </div>
           </div>
 
           <div className="flex items-center justify-between">
             <label className="flex items-center gap-2">
-              <input type="checkbox" name="is_healthy" className="h-4 w-4" />
+              <input type="checkbox" name="is_healthy" className="h-4 w-4 accent-green-800"/>
               <span className="text-sm">Saludable</span>
             </label>
 
             <div className="md:col-span-2 w-40">
-              <Button type="submit" className="w-40" disabled={loading}>
+              <Button type="submit" className="w-40 bg-green-700 hover:bg-green-800 cursor-pointer gap-2" disabled={loading}>
+                <Plus className="h-4 w-4"/>
                 {loading ? 'Registrando...' : 'Agregar Comida'}
               </Button>
             </div>

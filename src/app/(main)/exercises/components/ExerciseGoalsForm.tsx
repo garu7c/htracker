@@ -46,8 +46,8 @@ const ExerciseGoalsForm = ({ initialGoals }: { initialGoals: {durationGoal: numb
   return (
     <Card className="shadow-md">
       <CardHeader>
-        <CardTitle className="text-lg flex items-center gap-2">
-          <Target className="h-5 w-5 text-blue-700" /> Establecer Meta Diaria
+        <CardTitle className="text-lg font-bold flex items-center text-indigo-800 gap-2">
+          <Target className="h-5 w-5 " /> Establecer Meta Diaria
         </CardTitle>
       </CardHeader>
       <CardContent className="h-full py-6 flex flex-col justify-between">
@@ -55,7 +55,7 @@ const ExerciseGoalsForm = ({ initialGoals }: { initialGoals: {durationGoal: numb
           
           {/* Campo para la Meta de Duración (Minutos) */}
           <div className="space-y-2">
-            <Label htmlFor="duracionMeta"className='text-xl'>Minutos de Ejercicio por Día</Label>
+            <Label htmlFor="duracionMeta"className='text-sm text-indigo-800'>Minutos de Ejercicio por Día</Label>
             <Input className='text-[16px] w-32'
               id="duracionMeta"
               type="number" 
@@ -79,7 +79,7 @@ const ExerciseGoalsForm = ({ initialGoals }: { initialGoals: {durationGoal: numb
         <Button
           onClick={handleSave}
           disabled={isPending || parseInt(durationInput, 10) <= 0}
-          className="w-38 cursor-pointer mt-auto bg-blue-700 hover:bg-blue-900"
+          className="w-38 cursor-pointer mt-auto bg-indigo-700 hover:bg-blue-800"
         >
           {isPending ? (
             <>Guardando...</>

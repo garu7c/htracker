@@ -13,8 +13,8 @@ const SleepTips = () => {
     return (
         <Card className="shadow-md border-2 border-gray-100 h-full">
             <CardHeader>
-                <CardTitle className="text-xl flex items-center gap-2 text-gray-800">
-                    <Lightbulb className="h-5 w-5 text-yellow-600" /> Consejos para un Mejor Descanso
+                <CardTitle className="text-lg font-bold text-purple-800 flex items-center gap-2">
+                    <Lightbulb className="h-5 w-5" /> Consejos para un Mejor Descanso
                 </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">

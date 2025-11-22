@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Clock, Target, Zap, Heart, Droplets, Flame, Award, Sparkles } from 'lucide-react';
+import { Clock, Target, Zap, Heart, Droplets, Flame, Award, Sparkles, Lightbulb } from 'lucide-react';
 import { getExerciseDashboardData } from './actions';
 import AddExerciseForm from './components/AddExerciseForm';
 import ExerciseGoalsForm from './components/ExerciseGoalsForm';
@@ -85,14 +85,14 @@ const ProgressDisplay = ({ progress }: { progress: DailyProgress }) => {
   const progressPercentage = Math.min(100, (current / goal) * 100);
 
   return (
-    <Card className="shadow-lg border border-indigo-200 bg-white/80 backdrop-blur-sm">
-      <CardHeader className="pb-3">
+    <Card className="shadow-lg border border-indigo-200 bg-white/80 backdrop-blur-sm h-52">
+      <CardHeader>
         <CardTitle className="text-lg font-bold text-indigo-800 flex items-center gap-2">
           <Award className="h-5 w-5" /> Progreso Diario
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center mb-4">
           <div className="flex items-baseline gap-1">
             <span className="text-3xl font-extrabold text-indigo-900">{current}</span>
             <span className="text-sm font-normal text-indigo-700">
@@ -120,7 +120,7 @@ const ProgressDisplay = ({ progress }: { progress: DailyProgress }) => {
 
 const HealthStats = () => {
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 gap-2">
       <Card className="bg-gradient-to-b from-gray-300 to-indigo-600 backdrop-blur-sm border border-gray-200 text-white ">
         <CardContent className="p-4">
           <div className="flex items-center gap-2 mb-2">
@@ -156,7 +156,8 @@ const QuickExercises = () => {
   return (
     <Card className="bg-white/80 backdrop-blur-sm border border-gray-200">
       <CardHeader className="pb-3">
-        <CardTitle className="text-lg font-bold">Aprende ejercicios nuevos</CardTitle>
+        <CardTitle className="text-lg font-bold text-indigo-800 flex items-center gap-2">
+          <Lightbulb className='h-5 w-5'/>Aprende ejercicios nuevos</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         {exercises.map((exercise, index) => (
@@ -188,20 +189,20 @@ export default async function ExercisesPage() {
   return (
     <div className="space-y-6">
       {/* Hero Section para ejercicios */}
-      <div className="bg-gradient-to-r from-pink-700 to-indigo-700 rounded-3xl p-8 text-white relative overflow-visible max-h-[350px] flex items-center">
+      <div className="bg-gradient-to-r from-pink-700 to-indigo-700 rounded-3xl p-8 text-white relative overflow-visible max-h-[300px] flex items-center">
         <div className="relative z-10 w-full">
           <div className="flex justify-between items-center">
             <div className="max-w-2xl">
               <div className="flex items-center gap-2 mb-4">
                 <Sparkles className="h-6 w-6 text-indigo-300" />
-                <span className="text-lg font-semibold text-blue-100">FitTracker</span>
+                <span className="text-sm font-semibold text-blue-100">FitTracker</span>
               </div>
               
               <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
                 Transforma Tu 
                 <span className="block text-indigo-300">Cuerpo</span>
               </h1>
-              <p className='text-white'>
+              <p className='text-white text-sm'>
                 El ejercicio regular fortalece tu corazón, mejora la circulación y aumenta la resistencia. 
                 Además, libera endorfinas que mejoran tu estado de ánimo y reducen el estrés.
               </p>
@@ -209,28 +210,28 @@ export default async function ExercisesPage() {
             
             {/* Imagen más grande que sobresale del hero */}
             <div className="hidden lg:block relative">
-              <div className="w-[1080px] h-[620px] relative top-2 -right-30">
+              <div className="w-[350px] h-[350px] relative -top-4">
                 {/* Efecto de brillo detrás de la imagen */}
                 <div className="absolute -inset-4 rounded-full blur-xl"></div>
                 
                 {/* Contenedor de la imagen con animación de entrada desde abajo */}
                 <div className="relative w-full h-full rounded-2xl p-4 animate-slide-up">
                   <Image
-                    src="/hero-exc.png" // Cambia por tu imagen de ejercicios
+                    src="/hero-exr.png" // Cambia por tu imagen de ejercicios
                     alt="Pesas Romanas"
-                    width={1080}
-                    height={700}
+                    width={650}
+                    height={600}
                     className="w-full h-full object-contain drop-shadow-2xl"
                     priority
                   />
                 </div>
                 
                 {/* Elementos decorativos flotantes */}
-                <div className="absolute top-30 right-34 w-6 h-6 bg-purple-400 rounded-full animate-pulse"></div>
-                <div className="absolute top-34 right-30 w-4 h-4 bg-blue-300 rounded-full animate-pulse delay-1000"></div>
-                <div className="absolute bottom-42 right-46 w-5 h-5 bg-red-400 rounded-full animate-pulse delay-500"></div>
-                <div className="absolute bottom-42 left-38 w-4 h-4 bg-pink-600 rounded-full animate-pulse delay-700"></div>
-                <div className="absolute bottom-46 left-46 w-3 h-3 bg-red-300 rounded-full animate-pulse delay-300"></div>
+                <div className="absolute top-10 right-2 w-6 h-6 bg-purple-400 rounded-full animate-pulse"></div>
+                <div className="absolute top-14 right-6 w-4 h-4 bg-blue-300 rounded-full animate-pulse delay-1000"></div>
+                <div className="absolute bottom-12 right-2 w-5 h-5 bg-red-400 rounded-full animate-pulse delay-500"></div>
+                <div className="absolute bottom-12 -left-2 w-4 h-4 bg-pink-600 rounded-full animate-pulse delay-700"></div>
+                <div className="absolute bottom-16 -left-4 w-3 h-3 bg-red-300 rounded-full animate-pulse delay-300"></div>
               </div>
             </div>
           </div>

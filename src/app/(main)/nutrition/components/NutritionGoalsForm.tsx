@@ -8,6 +8,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@
 import { saveUserNutritionGoals } from '../actions';
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
+import { Save, Target } from 'lucide-react';
 
 export default function NutritionGoalsForm({ initial }: { initial: number }) {
   const router = useRouter();
@@ -35,11 +36,13 @@ export default function NutritionGoalsForm({ initial }: { initial: number }) {
   return (
     <Card className="shadow-md h-full">
       <CardHeader>
-        <CardTitle className="text-lg flex items-center gap-2">Establecer Meta Diaria</CardTitle>
+        <CardTitle className="text-lg text-green-800 font-bold flex items-center gap-2">
+          <Target className="h-5 w-5"/>
+          Establecer Meta Diaria</CardTitle>
       </CardHeader>
       <CardContent className="h-full flex flex-col justify-between">
-        <div className="space-y-4">
-          <div className="space-y-2">
+        <div className="space-y-8">
+          <div className="space-y-6">
             <Label>Comidas saludables por día</Label>
             <Select value={String(meals)} onValueChange={(v) => setMeals(Number(v))}>
               <SelectTrigger>
@@ -61,8 +64,8 @@ export default function NutritionGoalsForm({ initial }: { initial: number }) {
           )}
         </div>
 
-        <Button onClick={handleSave} disabled={isPending} className="w-full mt-auto bg-green-600 hover:bg-green-700">
-          {isPending ? 'Guardando...' : 'Guardar meta'}
+        <Button onClick={handleSave} disabled={isPending} className="w-32 cursor-pointer mt-auto bg-green-700 hover:bg-green-800 gap-2">
+          <Save className="h-4 w-4"/>{isPending ? 'Guardando...' : 'Guardar meta'}
         </Button>
       </CardContent>
     </Card>

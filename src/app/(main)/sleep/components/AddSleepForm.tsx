@@ -50,7 +50,7 @@ export default function AddSleepForm({ todaySleep }: AddSleepFormProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="text-lg font-bold text-purple-800 flex items-center gap-2">
           <Plus className="h-5 w-5" />
           {todaySleep ? 'Actualizar Registro de Sueño' : 'Registrar Sueño'}
         </CardTitle>
@@ -59,7 +59,7 @@ export default function AddSleepForm({ todaySleep }: AddSleepFormProps) {
         <form action={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="bedtime">Hora de Dormir</Label>
+              <Label htmlFor="bedtime"className='text-purple-800'>Hora de Dormir</Label>
               <Input
                 id="bedtime"
                 name="bedtime"
@@ -71,7 +71,7 @@ export default function AddSleepForm({ todaySleep }: AddSleepFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="wakeup">Hora de Despertar</Label>
+              <Label htmlFor="wakeup"className='text-purple-800'>Hora de Despertar</Label>
               <Input
                 id="wakeup"
                 name="wakeup"
@@ -83,7 +83,7 @@ export default function AddSleepForm({ todaySleep }: AddSleepFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="quality">Calidad del Sueño</Label>
+              <Label htmlFor="quality"className='text-purple-800'>Calidad del Sueño</Label>
               <Select value={quality} onValueChange={setQuality} name="quality">
                 <SelectTrigger id="quality">
                   <SelectValue placeholder="Seleccionar calidad" />
@@ -106,17 +106,17 @@ export default function AddSleepForm({ todaySleep }: AddSleepFormProps) {
 
           <Button 
             type="submit" 
-            className="w-full" 
+            className="w-34 bg-purple-700 hover:bg-purple-800 cursor-pointer" 
             disabled={isPending || !bedtime || !wakeup || !quality}
           >
             {isPending ? (
               <>
-                <Clock className="h-4 w-4 mr-2 animate-spin" />
+                <Clock className="h-4 w-4 animate-spin" />
                 {todaySleep ? 'Actualizando...' : 'Registrando...'}
               </>
             ) : (
               <>
-                <Plus className="h-4 w-4 mr-2" />
+                <Plus className="h-4 w-4" />
                 {todaySleep ? 'Actualizar Sueño' : 'Registrar Sueño'}
               </>
             )}

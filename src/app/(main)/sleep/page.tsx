@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Clock, Target, Moon, Star, Bed, Zap, Sparkles } from 'lucide-react';
+import { Clock, Target, Moon, Star, Bed, Zap, Sparkles, CircleCheckBig } from 'lucide-react';
 import { getSleepDashboardData } from './actions';
 import { SleepEntry, DailySleepProgress } from '@/types/db';
 import AddSleepForm from './components/AddSleepForm';
@@ -82,8 +82,8 @@ const ProgressDisplay = ({ progress }: { progress: DailySleepProgress }) => {
   const progressPercentage = Math.min(100, (currentHours / goalHours) * 100);
 
   return (
-    <Card className="shadow-lg border border-purple-200 bg-white/80 backdrop-blur-sm">
-      <CardHeader className="pb-3">
+    <Card className="h-54 shadow-lg border border-purple-200 bg-white/80 backdrop-blur-sm">
+      <CardHeader>
         <CardTitle className="text-lg font-bold text-purple-800 flex items-center gap-2">
           <Target className="h-5 w-5" /> Progreso del Sueño
         </CardTitle>
@@ -117,7 +117,7 @@ const ProgressDisplay = ({ progress }: { progress: DailySleepProgress }) => {
 
 const SleepStats = () => {
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 gap-2">
       <Card className="bg-gradient-to-b from-purple-400 to-purple-600 backdrop-blur-sm border border-gray-200 text-white">
         <CardContent className="p-4">
           <div className="flex items-center gap-2 mb-2">
@@ -171,7 +171,8 @@ const SleepRoutines = () => {
   return (
     <Card className="bg-white/80 backdrop-blur-sm border border-gray-200">
       <CardHeader className="pb-3">
-        <CardTitle className="text-lg font-bold">Rutinas para Dormir</CardTitle>
+        <CardTitle className="text-lg font-bold text-purple-800 flex items-center gap-2">
+          <CircleCheckBig className='h-5 w-5'/>Rutinas para Dormir</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         {routines.map((routine, index) => (
@@ -211,14 +212,14 @@ export default async function SleepPage() {
             <div className="max-w-2xl">
               <div className="flex items-center gap-2 mb-4">
                 <Sparkles className="h-6 w-6 text-indigo-500" />
-                <span className="text-lg font-semibold text-indigo-100">SleepTracker</span>
+                <span className="text-sm font-semibold text-indigo-100">SleepTracker</span>
               </div>
               
               <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
                 Duerme Lo 
                 <span className="block text-indigo-500">Suficiente</span>
               </h1>
-              <p className='text-white'>
+              <p className='text-white text-sm'>
                 Un sueño de calidad es fundamental para la salud física y mental. 
                 Mejora la memoria, fortalece el sistema inmunológico y renueva tu energía para el día siguiente.
               </p>
@@ -226,7 +227,7 @@ export default async function SleepPage() {
             
             {/* Imagen más grande que sobresale del hero */}
             <div className="hidden lg:block relative">
-              <div className="w-[700px] h-[600px] relative -top-12 -right-10">
+              <div className="w-[580px] h-[600px] relative -top-12 -right-10">
                 {/* Efecto de brillo detrás de la imagen */}
                 <div className="absolute -inset-4 rounded-full blur-xl"></div>
                 

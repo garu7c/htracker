@@ -40,7 +40,7 @@ export default function AddExerciseForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center text-xl gap-2">
+        <CardTitle className="flex items-center text-lg font-bold text-indigo-800 gap-2">
           <Plus className="h-6 w-6" />
           Registrar Ejercicio
         </CardTitle>
@@ -49,7 +49,7 @@ export default function AddExerciseForm() {
         <form action={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="exercise-type"className="text-[18px]">Tipo de Ejercicio</Label>
+              <Label htmlFor="exercise-type"className="text-sm text-indigo-800">Tipo de Ejercicio</Label>
               <Select value={exerciseType} onValueChange={setExerciseType} name="exerciseType">
                 <SelectTrigger id="exercise-type">
                   <SelectValue placeholder="Seleccionar tipo" />
@@ -66,7 +66,7 @@ export default function AddExerciseForm() {
             </div>
 
             <div className="space-y-2 pr-28">
-              <Label htmlFor="duration"className='text-[18px]'>Duración (minutos)</Label>
+              <Label htmlFor="duration"className='text-sm text-indigo-800'>Duración (minutos)</Label>
               <Input
                 id="duration"
                 name="duration"
@@ -78,7 +78,7 @@ export default function AddExerciseForm() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="intensity"className='text-[18px]'>Intensidad</Label>
+              <Label htmlFor="intensity"className='text-sm text-indigo-800'>Intensidad</Label>
               <Select value={intensity} onValueChange={setIntensity} name="intensity">
                 <SelectTrigger id="intensity">
                   <SelectValue placeholder="Seleccionar intensidad"/>

@@ -52,8 +52,8 @@ const SleepGoalsForm = ({ initialGoals }: { initialGoals: GoalsProps }) => {
   return (
     <Card className="shadow-md border-2 border-purple-100">
       <CardHeader>
-        <CardTitle className="text-xl flex items-center gap-2 text-gray-800">
-          <Target className="h-5 w-5 text-purple-600" /> Configurar Metas de Sueño
+        <CardTitle className="text-lg font-bold text-purple-800 flex items-center gap-2">
+          <Target className="h-5 w-5" /> Configurar Metas de Sueño
         </CardTitle>
       </CardHeader>
       <CardContent className="h-full space-y-4">
@@ -61,7 +61,7 @@ const SleepGoalsForm = ({ initialGoals }: { initialGoals: GoalsProps }) => {
             
             {/* Campo para Horas de Sueño Objetivo */}
             <div className="space-y-2">
-              <Label htmlFor="horasMeta">Horas de sueño objetivo (diario)</Label>
+              <Label htmlFor="horasMeta"className='text-purple-800'>Horas de sueño objetivo (diario)</Label>
               <Input 
                 id="horasMeta"
                 type="number" 
@@ -76,7 +76,7 @@ const SleepGoalsForm = ({ initialGoals }: { initialGoals: GoalsProps }) => {
 
             {/* Hora Ideal para Dormir */}
             <div className="space-y-2">
-              <Label htmlFor="horaDormir">Hora ideal para dormir</Label>
+              <Label htmlFor="horaDormir"className='text-purple-800'>Hora ideal para dormir</Label>
               <Input 
                 id="horaDormir"
                 type="time" 
@@ -88,7 +88,7 @@ const SleepGoalsForm = ({ initialGoals }: { initialGoals: GoalsProps }) => {
 
             {/* Hora Ideal para Despertar */}
             <div className="space-y-2">
-              <Label htmlFor="horaDespertar">Hora ideal para despertar</Label>
+              <Label htmlFor="horaDespertar"className='text-purple-800'>Hora ideal para despertar</Label>
               <Input 
                 id="horaDespertar"
                 type="time" 
@@ -109,12 +109,12 @@ const SleepGoalsForm = ({ initialGoals }: { initialGoals: GoalsProps }) => {
         <Button
           onClick={handleSave}
           disabled={isPending || parseInt(hoursGoalInput, 10) <= 0}
-          className="w-full bg-purple-600 hover:bg-purple-700"
+          className="w-32 bg-purple-600 hover:bg-purple-700 cursor-pointer"
         >
           {isPending ? (
             <>Guardando...</>
           ) : (
-            <><Save className="h-4 w-4 mr-2" /> Guardar Metas</>
+            <><Save className="h-4 w-4" /> Guardar Metas</>
           )}
         </Button>
       </CardContent>

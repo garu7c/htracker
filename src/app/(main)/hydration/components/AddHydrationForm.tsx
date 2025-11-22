@@ -7,7 +7,7 @@ import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import { Droplets } from 'lucide-react';
+import { Droplets, Plus } from 'lucide-react';
 
 export default function AddHydrationForm() {
   const [loading, setLoading] = useState(false);
@@ -68,7 +68,7 @@ export default function AddHydrationForm() {
       <CardContent>
         <form onSubmit={onSubmit} className="space-y-4">
           <div className="space-y-3">
-            <Label htmlFor="cups" className="text-sm font-medium">Cantidad de Vasos</Label>
+            <Label htmlFor="cups" className="text-sm font-medium text-blue-700">Cantidad de Vasos</Label>
             <Select value={cups} onValueChange={setCups} name="cups">
               <SelectTrigger id="cups" className="w-full">
                 <SelectValue placeholder="Seleccionar vasos" />
@@ -82,7 +82,7 @@ export default function AddHydrationForm() {
               </SelectContent>
             </Select>
             <p className="text-xs text-gray-500">
-              Se asume que 1 vaso ≈ 250 ml
+              1 vaso ≈ 250 ml
             </p>
           </div>
 
@@ -100,8 +100,8 @@ export default function AddHydrationForm() {
             <Button 
               type="submit" 
               disabled={loading} 
-              className="bg-blue-600 hover:bg-blue-700 text-white w-40"
-            >
+              className="bg-blue-600 hover:bg-blue-700 cursor-pointer text-white w-40 gap-2"
+            ><Plus className='h-5 w-5'/>
               {loading ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>

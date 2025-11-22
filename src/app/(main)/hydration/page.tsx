@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Droplets, Target, Clock, GlassWater, Waves, Sparkles } from 'lucide-react';
+import { Droplets, Target, Clock, GlassWater, Waves, Sparkles, Goal, Award, Lightbulb } from 'lucide-react';
 import { getHydrationDashboardData, getUserHydrationGoals } from './actions';
 import HydrationGoalsForm from './components/HydrationGoalsForm';
 import AddHydrationForm from './components/AddHydrationForm';
@@ -58,10 +58,10 @@ const ProgressDisplay = ({ progress }: { progress: any }) => {
   const progressPercentage = Math.min(100, (current / goal) * 100);
 
   return (
-    <Card className="shadow-lg border border-blue-200 bg-white/80 backdrop-blur-sm">
-      <CardHeader className="pb-3">
+    <Card className="shadow-lg border border-blue-200 bg-white/80 backdrop-blur-sm h-54">
+      <CardHeader>
         <CardTitle className="text-lg font-bold text-blue-800 flex items-center gap-2">
-          <Target className="h-5 w-5" /> Progreso de Hidratación
+          <Award className="h-5 w-5" /> Progreso de Hidratación
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -85,9 +85,6 @@ const ProgressDisplay = ({ progress }: { progress: any }) => {
           {current >= goal
             ? '¡Meta alcanzada! 💧'
             : `Faltan ${goal - current} vasos`}
-        </p>
-        <p className="text-xs text-blue-500 text-center mt-2">
-          Se asume que 1 vaso ≈ 250 ml
         </p>
       </CardContent>
     </Card>
@@ -149,8 +146,9 @@ const HydrationTips = () => {
 
   return (
     <Card className="bg-white/80 backdrop-blur-sm border border-gray-200">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-lg font-bold">Consejos de Hidratación</CardTitle>
+      <CardHeader>
+        <CardTitle className="text-lg font-bold text-blue-700 flex items-center gap-2">
+          <Lightbulb className='w-5 h-5'/>Consejos de Hidratación</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         {tips.map((tip, index) => (
@@ -192,14 +190,14 @@ export default async function HydrationPage() {
             <div className="max-w-2xl">
               <div className="flex items-center gap-2 mb-4">
                 <Sparkles className="h-6 w-6 text-white" />
-                <span className="text-lg font-semibold text-cyan-100">HydroTracker</span>
+                <span className="text-sm font-semibold text-cyan-100">HydroTracker</span>
               </div>
               
               <h1 className="text-4xl text-cyan-200 md:text-5xl font-bold mb-4 leading-tight">
                 Manten Tu Cuerpo
                 <span className="block text-white">Hidratado</span>
               </h1>
-              <p className='text-cyan-100'>
+              <p className='text-cyan-100 text-sm'>
                 La hidratación adecuada es esencial para todas las funciones corporales. 
                 Mejora la digestión, regula la temperatura corporal, lubrica las articulaciones y ayuda a transportar nutrientes.
               </p>
@@ -207,7 +205,7 @@ export default async function HydrationPage() {
             
             {/* Imagen más grande que sobresale del hero */}
             <div className="hidden lg:block relative">
-              <div className="w-[700px] h-[450px] relative -top-8 -right-10">
+              <div className="w-[500px] h-[450px] relative -top-8 -right-10">
                 {/* Efecto de brillo detrás de la imagen */}
                 <div className="absolute -inset-4 bg-yellow-200/20 rounded-full blur-xl"></div>
                 
