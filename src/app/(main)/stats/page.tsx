@@ -121,7 +121,7 @@ export default function StatsPage() {
             
             {/* Sleep Hours */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4">
-              <h4 className="font-semibold text-gray-900 mb-2">Sleep Hours</h4>
+              <h4 className="font-semibold text-gray-900 mb-2">Sleep Hours--Preview</h4>
               <p className="text-2xl font-bold text-purple-600">00 / 8h</p>
               <p className="text-sm text-gray-500">today</p>
             </div>
