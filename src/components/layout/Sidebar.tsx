@@ -68,7 +68,7 @@ export default function Sidebar({ onWidthChange }: SidebarProps) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="flex flex-col justify-between h-full">
+      <div className="flex flex-col justify-between h-168">
         
         {/* Encabezado con logo - tamaño consistente */}
         <div className="flex items-center justify-center h-12 pb-2">
@@ -120,7 +120,7 @@ export default function Sidebar({ onWidthChange }: SidebarProps) {
             className={`
               flex items-center w-full px-3 py-3 rounded-lg transition-all duration-200
               font-medium
-              text-red-600 hover:bg-red-50 border border-transparent hover:border-red-100
+              text-red-600 hover:bg-red-50 border border-transparent hover:border-red-100 cursor-pointer
             `}
           >
             {/* Icono de logout con tamaño consistente: h-6 w-6 en ambos estados */}
