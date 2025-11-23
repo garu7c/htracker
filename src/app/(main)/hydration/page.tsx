@@ -200,13 +200,13 @@ export default async function HydrationPage() {
               </h1>
               <p className='text-cyan-100 text-xs'>
                 La hidratación adecuada es esencial para todas las funciones corporales. 
-                Mejora la digestión, regula la temperatura corporal, lubrica las articulaciones y ayuda a transportar nutrientes.
+                Mejora la digestión, regula la temperatura corporal y ayuda a transportar nutrientes.
               </p>
             </div>
             
             {/* Imagen más grande que sobresale del hero */}
             <div className="hidden lg:block relative">
-              <div className="w-[400px] h-[360px] relative -top-8 -right-10">
+              <div className="w-[400px] h-[360px] relative bottom-6 -right-10">
                 {/* Efecto de brillo detrás de la imagen */}
                 <div className="absolute -inset-4 bg-yellow-200/20 rounded-full blur-xl"></div>
                 

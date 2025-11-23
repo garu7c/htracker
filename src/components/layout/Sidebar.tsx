@@ -68,7 +68,7 @@ export default function Sidebar({ onWidthChange }: SidebarProps) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="flex flex-col justify-between h-168">
+      <div className="flex flex-col justify-between h-full">
         
         {/* Encabezado con logo - tamaño consistente */}
         <div className="flex items-center justify-center h-12 pb-2">
