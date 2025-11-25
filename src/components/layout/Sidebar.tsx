@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { TrendingUp, Droplets, Utensils, Moon, Dumbbell, LogOut } from 'lucide-react';
 import { getTexts } from '@/lib/i18n';
 import Image from 'next/image';
+import { createClient } from '@/lib/client';
 
 const sidebarItems = [
   { key: 'stats', href: '/stats', icon: TrendingUp },
@@ -42,13 +43,28 @@ export default function Sidebar({ onWidthChange }: SidebarProps) {
   const isMinimal = !isExpanded && !isHovered;
 
   async function handleLogout() {
-    try {
-      await fetch('/api/auth/logout', { method: 'POST' });
-      router.push('/login');
-    } catch (err) {
-      console.error('Logout failed:', err);
+  try {
+    const supabase = createClient();
+    
+    // 1. Cerrar sesión en Supabase
+    const { error } = await supabase.auth.signOut();
+    
+    if (error) {
+      console.error('Supabase logout error:', error);
+      // Intentar redirigir de todas formas
+      window.location.href = '/login';
+      return;
     }
+    
+    // 2. Redirigir a login
+    window.location.href = '/login';
+    
+  } catch (err) {
+    console.error('Logout failed:', err);
+    // Fallback
+    window.location.href = '/login';
   }
+}
   
   const isActive = (href: string) => {
     return pathname.startsWith(href);
@@ -111,8 +127,7 @@ export default function Sidebar({ onWidthChange }: SidebarProps) {
               </span>
             </Link>
           ))}
-        </nav>
-
+        </nav>  
         {/* Logout - icono con tamaño consistente en ambos estados */}
         <div className="mt-3 pt-2 border-t border-gray-200">
           <button

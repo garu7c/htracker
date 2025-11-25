@@ -107,29 +107,57 @@ export async function getSleepDashboardData(): Promise<SleepSectionData> {
 }
 
 //Registrar una nueva entrada de sueño
+//Registrar una nueva entrada de sueño
 export async function addSleepEntry(formData: FormData): Promise<{ success: boolean; message: string }> {
   const supabase = createServerSupabaseClient();
   const todayString = getTodayDateString();
 
+  console.log('🖥️ [SERVIDOR] addSleepEntry llamado');
+  console.log('📋 [SERVIDOR] FormData recibido:');
+  for (let [key, value] of formData.entries()) {
+    console.log(`  ${key}:`, value, '(tipo:', typeof value, ')');
+  }
+
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
+    console.error('❌ [SERVIDOR] Usuario no autenticado');
     return { success: false, message: 'Usuario no autenticado. Inicia sesión.' };
   }
 
-  const timeSleep = formData.get('timeSleep') as string;
-  const timeWake = formData.get('timeWake') as string;
+  // CORREGIR: Usar los nombres correctos que vienen del formulario
+  const timeSleep = formData.get('bedtime') as string;  // Cambiado de 'timeSleep' a 'bedtime'
+  const timeWake = formData.get('wakeup') as string;    // Cambiado de 'timeWake' a 'wakeup'
   const quality = formData.get('quality') as SleepEntry['quality'];
 
+  console.log('🔍 [SERVIDOR] Campos extraídos:', { 
+    bedtime: timeSleep, 
+    wakeup: timeWake, 
+    quality 
+  });
+
   if (!timeSleep || !timeWake || !quality) {
+    console.error('❌ [SERVIDOR] Campos faltantes:', {
+      bedtime: !!timeSleep,
+      wakeup: !!timeWake, 
+      quality: !!quality
+    });
     return { success: false, message: 'Todos los campos (Hora de Dormir, Despertar, Calidad) son requeridos.' };
   }
+
+  console.log('✅ [SERVIDOR] Validación pasada, calculando duración...');
   
   const totalHours = calculateSleepDuration(timeSleep, timeWake);
+  
+  console.log('⏱️ [SERVIDOR] Duración calculada:', totalHours, 'horas');
+  
   if (totalHours <= 0) {
-      return { success: false, message: 'La hora de despertar debe ser posterior a la de dormir (considerando cruce de medianoche).' };
+    console.error('❌ [SERVIDOR] Duración inválida:', totalHours);
+    return { success: false, message: 'La hora de despertar debe ser posterior a la de dormir (considerando cruce de medianoche).' };
   }
+
   if (!['excelente', 'buena', 'regular', 'mala'].includes(quality.toLowerCase())) {
-     return { success: false, message: 'Calidad de sueño no válida.' };
+    console.error('❌ [SERVIDOR] Calidad inválida:', quality);
+    return { success: false, message: 'Calidad de sueño no válida.' };
   }
 
   const newEntry: Omit<SleepEntry, 'id' | 'created_at'> = {
@@ -141,15 +169,18 @@ export async function addSleepEntry(formData: FormData): Promise<{ success: bool
     quality: quality.toLowerCase(),
   };
 
+  console.log('💾 [SERVIDOR] Insertando en BD:', newEntry);
+
   const { error } = await supabase
     .from('sleep_entries')
     .insert(newEntry);
 
   if (error) {
-    console.error('Error al insertar sueño:', error.message);
+    console.error('❌ [SERVIDOR] Error de Supabase:', error);
     return { success: false, message: `Error en la base de datos: ${error.message}` };
   }
 
+  console.log('✅ [SERVIDOR] Registro insertado exitosamente');
   return { success: true, message: 'Período de sueño registrado exitosamente.' };
 }
 
