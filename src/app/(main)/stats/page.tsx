@@ -68,7 +68,7 @@ export default function StatsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50/30 p-5">
+    <div className="space-y-6">
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">{t.pages.stats.title}</h1>

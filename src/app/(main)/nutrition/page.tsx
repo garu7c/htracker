@@ -222,7 +222,7 @@ export default async function NutritionPage() {
                   <Image
                     src="/hero-nutr.png"
                     alt="Comida saludable"
-                    width={560}
+                    width={480}
                     height={480}
                     className="w-full h-full object-contain drop-shadow-2xl"
                     priority

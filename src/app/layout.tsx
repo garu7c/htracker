@@ -43,16 +43,11 @@ export default async function RootLayout({
         {/* Solo mostrar el layout de la app si está autenticado */}
         {authenticated ? (
           <div className="min-h-screen bg-blue-50/40">
-            {/* Header con título fuera del sidebar */}
-            <header className="fixed top-6 left-6 z-50">
-              <h1 className="text-2xl font-bold text-gray-800 ml-24">HTracker</h1>
-            </header>
-
             {/* Sidebar principal */}
             <Sidebar />
 
             {/* Contenido Principal */}
-            <main className="min-h-screen pl-[7rem] pt-6 pr-6 pb-6 bg-blue-50">
+            <main className="min-h-screen pl-6 pt-6 pr-6 pb-6">
               {children}
             </main>
           </div>

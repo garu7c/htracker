@@ -217,7 +217,7 @@ export default async function SleepPage() {
             
             {/* Imagen más grande que sobresale del hero */}
             <div className="hidden lg:block relative">
-              <div className="w-[464px] h-[480px] relative -top-12 -right-10">
+              <div className="w-[480px] h-[480px] relative -top-12 -right-10">
                 {/* Efecto de brillo detrás de la imagen */}
                 <div className="absolute -inset-4 rounded-full blur-xl"></div>
                 
@@ -226,7 +226,7 @@ export default async function SleepPage() {
                   <Image
                     src="/hero-sleep.png" // Cambia por tu imagen de sueño
                     alt="Persona durmiendo tranquilamente"
-                    width={560}
+                    width={480}
                     height={480}
                     className="w-full h-full object-contain drop-shadow-2xl"
                     priority

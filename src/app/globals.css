@@ -123,7 +123,7 @@
 
 /* Cuando el sidebar está expandido */
 .sidebar-expanded\:ml-64 {
-  margin-left: 16rem;
+  margin-left: 10rem;
 }
 
 /* Cuando el sidebar está colapsado */
