@@ -2,14 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/client';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { Droplets } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Droplets, TrendingUp } from 'lucide-react';
+import { PolarRadiusAxis, RadialBar, RadialBarChart } from 'recharts';
 
 interface HydrationStats {
   current: number;
   goal: number;
-  streak: number;
 }
 
 export default function HydrationCard({ userId }: { userId: string }) {
@@ -22,7 +21,6 @@ export default function HydrationCard({ userId }: { userId: string }) {
       try {
         const today = new Date().toISOString().split('T')[0];
 
-        // Obtener cantidad de agua de hoy
         const { data: todayData } = await supabase
           .from('hydration_entries')
           .select('quantity')
@@ -31,43 +29,15 @@ export default function HydrationCard({ userId }: { userId: string }) {
 
         const totalToday = (todayData || []).reduce((sum, e) => sum + e.quantity, 0);
 
-        // Obtener meta
         const { data: goalData } = await supabase
           .from('hydration_goals')
           .select('cups_per_day')
           .eq('user_id', userId)
           .single();
 
-        // Calcular racha
-        let streak = 0;
-        if (totalToday >= (goalData?.cups_per_day || 8)) {
-          streak = 1;
-          const dayMs = 24 * 60 * 60 * 1000;
-          let checkDate = new Date(today);
-
-          for (let i = 1; i <= 30; i++) {
-            checkDate.setTime(checkDate.getTime() - dayMs);
-            const dateStr = checkDate.toISOString().split('T')[0];
-
-            const { data } = await supabase
-              .from('hydration_entries')
-              .select('quantity')
-              .eq('user_id', userId)
-              .eq('entry_date', dateStr);
-
-            const dayTotal = (data || []).reduce((sum, e) => sum + e.quantity, 0);
-            if (dayTotal >= (goalData?.cups_per_day || 8)) {
-              streak++;
-            } else {
-              break;
-            }
-          }
-        }
-
         setStats({
           current: totalToday,
           goal: goalData?.cups_per_day || 8,
-          streak,
         });
       } catch (err) {
         console.error('Error loading hydration stats:', err);
@@ -77,15 +47,18 @@ export default function HydrationCard({ userId }: { userId: string }) {
     }
 
     loadStats();
-  }, [userId, supabase]);
+  }, [userId]);
 
   if (loading) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Hidratación</CardTitle>
+      <Card className="flex flex-col relative overflow-hidden">
+        <CardHeader className="items-center pb-0">
+          <CardTitle className="flex items-center gap-2 text-xs text-blue-700">
+            <Droplets className="h-3 w-3" />
+            Hidratación
+          </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex flex-1 items-center justify-center">
           <p className="text-sm text-gray-500">Cargando...</p>
         </CardContent>
       </Card>
@@ -94,57 +67,98 @@ export default function HydrationCard({ userId }: { userId: string }) {
 
   if (!stats) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Hidratación</CardTitle>
+      <Card className="flex flex-col relative overflow-hidden">
+        <CardHeader className="items-center pb-0">
+          <CardTitle className="flex items-center gap-2 text-xs text-blue-700">
+            <Droplets className="h-3 w-3" />
+            Hidratación
+          </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex flex-1 items-center justify-center">
           <p className="text-sm text-gray-500">No hay datos disponibles</p>
         </CardContent>
       </Card>
     );
   }
 
-  const progressPercent = (stats.current / stats.goal) * 100;
+  const progressPercent = Math.min(100, Math.round((stats.current / stats.goal) * 100));
+
+  const chartData = [
+    {
+      name: 'Total',
+      current: Math.min(stats.current, stats.goal),
+      remaining: Math.max(0, stats.goal - stats.current),
+      total: stats.goal,
+    },
+  ];
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="flex items-center gap-2 text-sm">
-              <Droplets className="h-4 w-4 text-cyan-600" />
-              Hidratación
-            </CardTitle>
-            <CardDescription className="text-xs">Vasos de agua</CardDescription>
-          </div>
-          <div className="text-right">
-            <p className="text-2xl font-bold text-cyan-600">{Math.round(progressPercent)}%</p>
-            <p className="text-xs text-gray-500">completado</p>
-          </div>
-        </div>
+    <Card className="flex flex-col relative overflow-hidden">
+      <CardHeader className="items-center pb-0">
+        <CardTitle className="flex items-center gap-2 text-xs text-blue-700">
+          <Droplets className="h-3 w-3" />
+          Hidratación
+        </CardTitle>
+        <CardDescription className="text-xs">
+          Vasos de agua: {stats.current}
+        </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-3">
-        <div className="space-y-2">
-          <div className="flex justify-between text-xs">
-            <span className="text-gray-600">{stats.current} / {stats.goal} vasos</span>
-          </div>
-          <Progress value={progressPercent} className="h-2" />
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
-          <div className="bg-cyan-50 p-2 rounded-lg">
-            <p className="text-xs text-gray-600 mb-1">Racha</p>
-            <p className="text-lg font-bold text-cyan-600">{stats.streak}</p>
-            <p className="text-xs text-gray-500">días</p>
-          </div>
-          <div className="bg-cyan-50 p-2 rounded-lg">
-            <p className="text-xs text-gray-600 mb-1">Faltante</p>
-            <p className="text-2xl font-bold text-cyan-600">{Math.max(0, stats.goal - stats.current)}</p>
-            <p className="text-xs text-gray-500">vasos</p>
-          </div>
+      
+      <CardContent className="flex flex-1 items-center justify-center pt-0 pb-12">
+        <div className="mx-auto aspect-square w-full max-w-[160px]">
+          <RadialBarChart
+            width={160}
+            height={160}
+            data={chartData}
+            startAngle={180}
+            endAngle={0}
+            innerRadius={60}
+            outerRadius={80}
+          >
+            <PolarRadiusAxis tick={false} tickLine={false} axisLine={false} />
+            <RadialBar
+              dataKey="remaining"
+              stackId="a"
+              cornerRadius={5}
+              fill="#dbeafe" // blue-100
+            />
+            <RadialBar
+              dataKey="current"
+              stackId="a"
+              cornerRadius={5}
+              fill="#1d4ed8" // blue-700
+            />
+            
+            <text
+              x="50%"
+              y="50%"
+              textAnchor="middle"
+              dominantBaseline="middle"
+              className="text-xl font-bold fill-blue-700"
+            >
+              {progressPercent}%
+            </text>
+            <text
+              x="50%"
+              y="60%"
+              textAnchor="middle"
+              dominantBaseline="middle"
+              className="text-xs fill-gray-500"
+            >
+              Completado
+            </text>
+          </RadialBarChart>
         </div>
       </CardContent>
+
+      <CardFooter className="absolute bottom-0 left-0 right-0 flex-col gap-1 text-xs pb-3 bg-background">
+        <div className="flex items-center gap-1 leading-none font-medium text-xs">
+          Meta Diaria <TrendingUp className="h-3 w-3" />
+        </div>
+        <div className="text-muted-foreground leading-none text-xs">
+          {stats.goal} vasos
+        </div>
+      </CardFooter>
     </Card>
   );
 }

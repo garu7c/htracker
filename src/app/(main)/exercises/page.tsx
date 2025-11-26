@@ -120,7 +120,10 @@ const ProgressDisplay = ({ progress }: { progress: DailyProgress }) => {
   );
 };
 
-const HealthStats = () => {
+const HealthStats = ({ cardioSessions, strengthSessions }: { 
+  cardioSessions: number; 
+  strengthSessions: number; 
+}) => {
   return (
     <div className="grid grid-cols-2 gap-2">
       <Card className="bg-gradient-to-b from-gray-300 to-indigo-600 backdrop-blur-sm border border-gray-200 text-white">
@@ -129,7 +132,7 @@ const HealthStats = () => {
             <Heart className="h-3 w-3 text-red-400" />
             <span className="text-xs font-medium">Cardio</span>
           </div>
-          <p className="text-2xl font-bold">5</p>
+          <p className="text-2xl font-bold">{cardioSessions}</p>
           <p className="text-xs text-indigo-100 mt-1">Sesiones esta semana</p>
         </CardContent>
       </Card>
@@ -140,7 +143,7 @@ const HealthStats = () => {
             <Flame className="h-3 w-3 text-orange-400" />
             <span className="text-xs font-medium">Fuerza</span>
           </div>
-          <p className="text-2xl font-bold">8</p>
+          <p className="text-2xl font-bold">{strengthSessions}</p>
           <p className="text-xs text-pink-100 mt-1">Sesiones esta semana</p>
         </CardContent>
       </Card>
@@ -182,7 +185,7 @@ const QuickExercises = () => {
 };
 
 export default async function ExercisesPage() {
-  const { progress, history } = await getExerciseDashboardData();
+  const { progress, history, stats } = await getExerciseDashboardData();
 
   const initialGoals = {
     durationGoal: progress.goal,
@@ -219,7 +222,7 @@ export default async function ExercisesPage() {
                 {/* Contenedor de la imagen con animación de entrada desde abajo */}
                 <div className="relative w-full h-full rounded-2xl p-4 animate-slide-up">
                   <Image
-                    src="/hero-exr.png" // Cambia por tu imagen de ejercicios
+                    src="/hero-exr.png"
                     alt="Pesas Romanas"
                     width={560}
                     height={480}
@@ -247,7 +250,10 @@ export default async function ExercisesPage() {
           {/* Progreso y estadísticas de salud */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <ProgressDisplay progress={progress} />
-            <HealthStats />
+            <HealthStats 
+              cardioSessions={stats?.cardioSessions || 0} 
+              strengthSessions={stats?.strengthSessions || 0} 
+            />
           </div>
 
           {/* Formulario para agregar ejercicio */}

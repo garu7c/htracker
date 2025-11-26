@@ -15,6 +15,14 @@ function getTodayDateString(): string {
   return today.toISOString().split('T')[0];
 }
 
+function getStartOfWeek(): string {
+  const today = new Date();
+  const dayOfWeek = today.getDay();
+  const diff = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+  const startOfWeek = new Date(today.setDate(diff));
+  return startOfWeek.toISOString().split('T')[0];
+}
+
 function calculateSleepDuration(start: string, end: string): number {
     const timeToMinutes = (time: string) => {
         const [h, m] = time.split(':').map(Number);
@@ -32,9 +40,6 @@ function calculateSleepDuration(start: string, end: string): number {
     return Math.round((durationMinutes / 60) * 10) / 10; 
 }
 
-
-
-
 // Obtener todos los datos del dashboard de sueño
 export async function getSleepDashboardData(): Promise<SleepSectionData> {
   const supabase = createServerSupabaseClient();
@@ -45,6 +50,7 @@ export async function getSleepDashboardData(): Promise<SleepSectionData> {
   }
 
   const todayString = getTodayDateString();
+  const startOfWeek = getStartOfWeek();
 
   // Obtener metas y racha de la tabla 'user_goals'
   const goalsPromise = supabase
@@ -69,10 +75,19 @@ export async function getSleepDashboardData(): Promise<SleepSectionData> {
     .order('created_at', { ascending: false })
     .limit(5);
 
-  const [progressResult, historyResult, goalsResult] = await Promise.all([
+  // Obtener horas totales de sueño de esta semana
+  const weeklySleepPromise = supabase
+    .from('sleep_entries')
+    .select('total_hours')
+    .eq('user_id', user.id)
+    .gte('sleep_date', startOfWeek)
+    .lte('sleep_date', todayString);
+
+  const [progressResult, historyResult, goalsResult, weeklySleepResult] = await Promise.all([
     progressPromise,
     historyPromise,
     goalsPromise,
+    weeklySleepPromise,
   ]);
 
   let sleepGoalHours = 8;
@@ -87,7 +102,11 @@ export async function getSleepDashboardData(): Promise<SleepSectionData> {
     idealWakeTime = goalsResult.data.sleep_ideal_wake_time ?? '06:30';
   }
 
+  // Solo horas de sueño de HOY para el progreso diario
   const totalHoursToday = progressResult.data?.reduce((sum, entry) => sum + entry.total_hours, 0) ?? 0;
+
+  // Horas totales de sueño de la semana
+  const totalHoursThisWeek = weeklySleepResult.data?.reduce((sum, entry) => sum + entry.total_hours, 0) ?? 0;
 
   const progress: DailySleepProgress = {
     current: Math.round(totalHoursToday * 10) / 10,
@@ -103,11 +122,17 @@ export async function getSleepDashboardData(): Promise<SleepSectionData> {
       wakeup_goal: idealWakeTime,
   };
 
-  return { progress, history, goals };
+  return { 
+    progress, 
+    history, 
+    goals,
+    stats: {
+      totalHoursThisWeek: Math.round(totalHoursThisWeek * 10) / 10
+    }
+  };
 }
 
-//Registrar una nueva entrada de sueño
-//Registrar una nueva entrada de sueño
+// Registrar una nueva entrada de sueño
 export async function addSleepEntry(formData: FormData): Promise<{ success: boolean; message: string }> {
   const supabase = createServerSupabaseClient();
   const todayString = getTodayDateString();
@@ -124,9 +149,8 @@ export async function addSleepEntry(formData: FormData): Promise<{ success: bool
     return { success: false, message: 'Usuario no autenticado. Inicia sesión.' };
   }
 
-  // CORREGIR: Usar los nombres correctos que vienen del formulario
-  const timeSleep = formData.get('bedtime') as string;  // Cambiado de 'timeSleep' a 'bedtime'
-  const timeWake = formData.get('wakeup') as string;    // Cambiado de 'timeWake' a 'wakeup'
+  const timeSleep = formData.get('bedtime') as string;
+  const timeWake = formData.get('wakeup') as string;
   const quality = formData.get('quality') as SleepEntry['quality'];
 
   console.log('🔍 [SERVIDOR] Campos extraídos:', { 
@@ -184,7 +208,7 @@ export async function addSleepEntry(formData: FormData): Promise<{ success: bool
   return { success: true, message: 'Período de sueño registrado exitosamente.' };
 }
 
-//Guardar las metas de sueño del usuario
+// Guardar las metas de sueño del usuario
 export async function saveUserSleepGoals({ sleepGoalHours, idealSleepTime, idealWakeTime }: {
   sleepGoalHours: number,
   idealSleepTime: string,

@@ -9,6 +9,14 @@ function getTodayDateString(): string {
   return today.toISOString().split('T')[0];
 }
 
+function getStartOfWeek(): string {
+  const today = new Date();
+  const dayOfWeek = today.getDay();
+  const diff = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+  const startOfWeek = new Date(today.setDate(diff));
+  return startOfWeek.toISOString().split('T')[0];
+}
+
 export async function getNutritionDashboardData(): Promise<NutritionSectionData> {
   const supabase = createServerSupabaseClient();
 
@@ -18,20 +26,23 @@ export async function getNutritionDashboardData(): Promise<NutritionSectionData>
   }
 
   const todayString = getTodayDateString();
+  const startOfWeek = getStartOfWeek();
 
-  // user_goals table holds consolidated goals (exercise, nutrition, hydration, etc.)
+  // Obtener metas
   const goalsPromise = supabase
     .from('user_goals')
     .select('nutrition_goal_meals')
     .eq('user_id', user.id)
     .single();
 
+  // Obtener comidas de HOY para el progreso diario
   const progressPromise = supabase
     .from('nutrition_entries')
     .select('id', { count: 'exact', head: true })
     .eq('user_id', user.id)
-    .eq('entry_date', todayString);
+    .eq('entry_date', todayString); // Solo registros de hoy
 
+  // Historial reciente
   const historyPromise = supabase
     .from('nutrition_entries')
     .select('*')
@@ -39,23 +50,52 @@ export async function getNutritionDashboardData(): Promise<NutritionSectionData>
     .order('created_at', { ascending: false })
     .limit(10);
 
-  const [progressResult, historyResult, goalsResult] = await Promise.all([
+  // Obtener comidas saludables de esta semana
+  const healthyMealsPromise = supabase
+    .from('nutrition_entries')
+    .select('*')
+    .eq('user_id', user.id)
+    .eq('is_healthy', true)
+    .gte('entry_date', startOfWeek)
+    .lte('entry_date', todayString);
+
+  // Obtener total de comidas de hoy
+  const totalMealsTodayPromise = supabase
+    .from('nutrition_entries')
+    .select('id', { count: 'exact', head: true })
+    .eq('user_id', user.id)
+    .eq('entry_date', todayString);
+
+  const [progressResult, historyResult, goalsResult, healthyMealsResult, totalMealsTodayResult] = await Promise.all([
     progressPromise,
     historyPromise,
     goalsPromise,
+    healthyMealsPromise,
+    totalMealsTodayPromise,
   ]);
 
   const mealsGoal = (goalsResult.data && (goalsResult.data.nutrition_goal_meals ?? 3)) || 3;
 
   const progress = {
-    current: progressResult.count ?? 0,
+    current: progressResult.count ?? 0, // Comidas de hoy
     goal: mealsGoal,
     streak: 0,
   };
 
   const history: NutritionEntry[] = (historyResult.data as NutritionEntry[]) || [];
 
-  return { progress, history };
+  // Calcular estadísticas
+  const healthyMealsThisWeek = healthyMealsResult.data?.length || 0;
+  const totalMealsToday = totalMealsTodayResult.count || 0;
+
+  return { 
+    progress, 
+    history,
+    stats: {
+      healthyMealsThisWeek,
+      totalMealsToday
+    }
+  };
 }
 
 export async function getUserNutritionGoals(): Promise<NutritionGoals> {
@@ -125,7 +165,7 @@ export async function addNutritionEntry(formData: FormData): Promise<{ success: 
 
   const { error } = await supabase.from('nutrition_entries').insert({
     user_id: user.id,
-    entry_date: todayString,
+    entry_date: todayString, // Siempre fecha actual
     meal_type,
     description,
     is_healthy,

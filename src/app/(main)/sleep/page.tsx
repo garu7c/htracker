@@ -105,28 +105,19 @@ const ProgressDisplay = ({ progress }: { progress: DailySleepProgress }) => {
   );
 };
 
-const SleepStats = () => {
+const SleepStats = ({ totalHoursThisWeek }: { 
+  totalHoursThisWeek: number; 
+}) => {
   return (
-    <div className="grid grid-cols-2 gap-2">
+    <div className="grid grid-cols-1 gap-2">
       <Card className="bg-gradient-to-b from-purple-400 to-purple-600 backdrop-blur-sm border border-gray-200 text-white">
         <CardContent className="p-3">
           <div className="flex items-center gap-2 mb-1">
             <Bed className="h-3 w-3 text-white" />
-            <span className="text-xs font-medium">Sueño Profundo</span>
+            <span className="text-xs font-medium">Horas de Sueño</span>
           </div>
-          <p className="text-2xl font-bold">2.5h</p>
-          <p className="text-xs text-purple-100 mt-1">Promedio diario</p>
-        </CardContent>
-      </Card>
-      
-      <Card className="bg-gradient-to-t from-indigo-500 to-purple-500 backdrop-blur-sm border border-gray-200 text-white">
-        <CardContent className="p-3">
-          <div className="flex items-center gap-2 mb-1">
-            <Zap className="h-3 w-3 text-white" />
-            <span className="text-xs font-medium">Calidad</span>
-          </div>
-          <p className="text-2xl font-bold">85%</p>
-          <p className="text-xs text-purple-100 mt-1">Esta semana</p>
+          <p className="text-2xl font-bold">{totalHoursThisWeek}h</p>
+          <p className="text-xs text-purple-100 mt-1">Total esta semana</p>
         </CardContent>
       </Card>
     </div>
@@ -185,7 +176,7 @@ const SleepRoutines = () => {
 };
 
 export default async function SleepPage() {
-  const { progress, history, goals } = await getSleepDashboardData();
+  const { progress, history, goals, stats } = await getSleepDashboardData();
 
   const initialGoals = {
     sleepGoalHours: goals.target_hours,
@@ -251,7 +242,7 @@ export default async function SleepPage() {
           {/* Progreso y estadísticas de sueño */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <ProgressDisplay progress={progress} />
-            <SleepStats />
+            <SleepStats totalHoursThisWeek={stats?.totalHoursThisWeek || 0} />
           </div>
 
           {/* Formulario para agregar sueño */}

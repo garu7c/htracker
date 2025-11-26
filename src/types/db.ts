@@ -39,6 +39,10 @@ export interface UserExerciseGoals {
 export interface ExerciseSectionData {
   progress: DailyProgress;
   history: ExerciseEntry[];
+  stats?: {
+    cardioSessions: number;
+    strengthSessions: number;
+  };
 }
 
 
@@ -70,9 +74,12 @@ export interface UserSleepGoals {
 }
 
 export interface SleepSectionData {
-    progress: DailySleepProgress;
-    history: SleepEntry[];
-    goals: UserSleepGoals;
+  progress: DailySleepProgress;
+  history: SleepEntry[];
+  goals: UserSleepGoals;
+  stats?: {
+    totalHoursThisWeek: number;
+  };
 }
 
 
@@ -95,6 +102,10 @@ export interface NutritionGoals {
 export interface NutritionSectionData {
   progress: DailyProgress;
   history: NutritionEntry[];
+  stats?: {
+    healthyMealsThisWeek: number;
+    totalMealsToday: number;
+  };
 }
 
 
