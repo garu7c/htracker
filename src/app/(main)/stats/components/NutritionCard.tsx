@@ -2,14 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/client';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { Utensils } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Utensils, TrendingUp } from 'lucide-react';
+import { PolarRadiusAxis, RadialBar, RadialBarChart } from 'recharts';
 
 interface NutritionStats {
   healthyMeals: number;
   totalMeals: number;
-  streak: number;
+  goalMeals: number;
 }
 
 export default function NutritionCard({ userId }: { userId: string }) {
@@ -32,36 +32,20 @@ export default function NutritionCard({ userId }: { userId: string }) {
         const totalMeals = todayData?.length || 0;
         const healthyMeals = (todayData || []).filter((m) => m.is_healthy).length;
 
-        // Calcular racha
-        let streak = 0;
-        if (healthyMeals > 0) {
-          streak = 1;
-          const dayMs = 24 * 60 * 60 * 1000;
-          let checkDate = new Date(today);
+        // Obtener meta de nutrición (número de comidas saludables objetivo)
+        const { data: goalData } = await supabase
+          .from('nutrition_goals')
+          .select('nutrition_goal_meals')
+          .eq('user_id', userId)
+          .single();
 
-          for (let i = 1; i <= 30; i++) {
-            checkDate.setTime(checkDate.getTime() - dayMs);
-            const dateStr = checkDate.toISOString().split('T')[0];
-
-            const { data } = await supabase
-              .from('nutrition_entries')
-              .select('is_healthy')
-              .eq('user_id', userId)
-              .eq('entry_date', dateStr);
-
-            const dayHealthyCount = (data || []).filter((m) => m.is_healthy).length;
-            if (dayHealthyCount > 0) {
-              streak++;
-            } else {
-              break;
-            }
-          }
-        }
+        // Meta por defecto: 3 comidas saludables
+        const goalMeals = goalData?.nutrition_goal_meals || 3;
 
         setStats({
           healthyMeals,
           totalMeals,
-          streak,
+          goalMeals,
         });
       } catch (err) {
         console.error('Error loading nutrition stats:', err);
@@ -71,15 +55,18 @@ export default function NutritionCard({ userId }: { userId: string }) {
     }
 
     loadStats();
-  }, [userId, supabase]);
+  }, [userId]);
 
   if (loading) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Nutrición</CardTitle>
+      <Card className="flex flex-col relative overflow-hidden">
+        <CardHeader className="items-center pb-0">
+          <CardTitle className="flex items-center gap-2 text-xs text-green-800">
+            <Utensils className="h-3 w-3" />
+            Nutrición
+          </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex flex-1 items-center justify-center">
           <p className="text-sm text-gray-500">Cargando...</p>
         </CardContent>
       </Card>
@@ -88,57 +75,101 @@ export default function NutritionCard({ userId }: { userId: string }) {
 
   if (!stats) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Nutrición</CardTitle>
+      <Card className="flex flex-col relative overflow-hidden">
+        <CardHeader className="items-center pb-0">
+          <CardTitle className="flex items-center gap-2 text-xs text-green-800">
+            <Utensils className="h-3 w-3" />
+            Nutrición
+          </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex flex-1 items-center justify-center">
           <p className="text-sm text-gray-500">No hay datos disponibles</p>
         </CardContent>
       </Card>
     );
   }
 
-  const progressPercent = stats.totalMeals > 0 ? (stats.healthyMeals / stats.totalMeals) * 100 : 0;
+  // Calcular el progreso basado en el número de comidas saludables vs la meta
+  const progressPercent = Math.min(100, Math.round((stats.healthyMeals / stats.goalMeals) * 100));
+
+  const chartData = [
+    { 
+      name: 'Total', 
+      current: Math.min(stats.healthyMeals, stats.goalMeals), 
+      remaining: Math.max(0, stats.goalMeals - stats.healthyMeals),
+      total: stats.goalMeals 
+    },
+  ];
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="flex items-center gap-2 text-sm">
-              <Utensils className="h-4 w-4 text-amber-600" />
-              Nutrición
-            </CardTitle>
-            <CardDescription className="text-xs">Comidas saludables</CardDescription>
-          </div>
-          <div className="text-right">
-            <p className="text-2xl font-bold text-amber-600">{Math.round(progressPercent)}%</p>
-            <p className="text-xs text-gray-500">completado</p>
-          </div>
-        </div>
+    <Card className="flex flex-col relative overflow-hidden">
+      <CardHeader className="items-center pb-0">
+        <CardTitle className="flex items-center gap-2 text-xs text-green-800">
+          <Utensils className="h-3 w-3" />
+          Nutrición
+        </CardTitle>
+        <CardDescription className="text-xs">
+          {stats.healthyMeals}/{stats.totalMeals} comidas saludables
+        </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-3">
-        <div className="space-y-2">
-          <div className="flex justify-between text-xs">
-            <span className="text-gray-600">{stats.healthyMeals} / {stats.totalMeals} comidas</span>
-          </div>
-          <Progress value={progressPercent} className="h-2" />
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
-          <div className="bg-amber-50 p-2 rounded-lg">
-            <p className="text-xs text-gray-600 mb-1">Racha</p>
-            <p className="text-lg font-bold text-amber-600">{stats.streak}</p>
-            <p className="text-xs text-gray-500">días</p>
-          </div>
-          <div className="bg-amber-50 p-2 rounded-lg">
-            <p className="text-xs text-gray-600 mb-1">Total comidas</p>
-            <p className="text-lg font-bold text-amber-600">{stats.totalMeals}</p>
-            <p className="text-xs text-gray-500">hoy</p>
-          </div>
+      
+      <CardContent className="flex flex-1 items-center justify-center pt-0 pb-12">
+        <div className="mx-auto aspect-square w-full max-w-[160px]">
+          <RadialBarChart
+            width={160}
+            height={160}
+            data={chartData}
+            startAngle={180}
+            endAngle={0}
+            innerRadius={60}
+            outerRadius={80}
+          >
+            <PolarRadiusAxis tick={false} tickLine={false} axisLine={false} />
+            <RadialBar
+              dataKey="remaining"
+              stackId="a"
+              cornerRadius={5}
+              fill="#dcfce7" // green-100
+            />
+            <RadialBar
+              dataKey="current"
+              stackId="a"
+              cornerRadius={5}
+              fill="#166534" // green-800
+            />
+            
+            <text
+              x="50%"
+              y="50%"
+              textAnchor="middle"
+              dominantBaseline="middle"
+              className="text-xl font-bold"
+              fill="#166534"
+            >
+              {progressPercent}%
+            </text>
+            <text
+              x="50%"
+              y="60%"
+              textAnchor="middle"
+              dominantBaseline="middle"
+              className="text-xs"
+              fill="#6b7280"
+            >
+              Completado
+            </text>
+          </RadialBarChart>
         </div>
       </CardContent>
+
+      <CardFooter className="absolute bottom-0 left-0 right-0 flex-col gap-1 text-xs pb-3 bg-background">
+        <div className="flex items-center gap-1 leading-none font-medium text-xs">
+          Meta <TrendingUp className="h-3 w-3" />
+        </div>
+        <div className="text-muted-foreground leading-none text-xs">
+          {stats.goalMeals} comidas saludables
+        </div>
+      </CardFooter>
     </Card>
   );
 }

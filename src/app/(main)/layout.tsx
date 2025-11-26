@@ -12,15 +12,15 @@ export default function MainLayout({
 
   return (
     <div className="flex min-h-screen bg-blue-100/50">
-      <div 
+      <div
         className="transition-all duration-300 ease-in-out"
         style={{ width: sidebarWidth }}
       >
         <Sidebar onWidthChange={setSidebarWidth} />
       </div>
-      <main 
+      <main
         className="flex-1 transition-all duration-300 ease-in-out p-6"
-        style={{ 
+        style={{
           marginLeft: sidebarWidth,
           width: `calc(100% - ${sidebarWidth})`
         }}

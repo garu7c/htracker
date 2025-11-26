@@ -56,7 +56,7 @@
     "pages": {
       "stats": {
         "title": "Datos y Análisis",
-        "description": "Esta es la página de datos y análisis."
+        "description": "Visualiza como vas progresando."
       },
       "exercises": {
         "title": "Ejercicio",

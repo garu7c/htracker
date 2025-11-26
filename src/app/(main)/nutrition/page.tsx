@@ -105,7 +105,10 @@ const ProgressDisplay = ({ progress }: { progress: any }) => {
   );
 };
 
-const NutritionStats = () => {
+const NutritionStats = ({ healthyMealsThisWeek, totalMealsToday }: { 
+  healthyMealsThisWeek: number; 
+  totalMealsToday: number; 
+}) => {
   return (
     <div className="grid grid-cols-2 gap-2">
       <Card className="bg-gradient-to-b from-green-400 to-green-600 backdrop-blur-sm border border-gray-200 text-white">
@@ -114,7 +117,7 @@ const NutritionStats = () => {
             <Apple className="h-3 w-3 text-white" />
             <span className="text-xs font-medium">Comidas Saludables</span>
           </div>
-          <p className="text-2xl font-bold">5</p>
+          <p className="text-2xl font-bold">{healthyMealsThisWeek}</p>
           <p className="text-xs text-green-100 mt-1">Esta semana</p>
         </CardContent>
       </Card>
@@ -123,10 +126,10 @@ const NutritionStats = () => {
         <CardContent className="p-3">
           <div className="flex items-center gap-2 mb-1">
             <Carrot className="h-3 w-3 text-white" />
-            <span className="text-xs font-medium">Verduras Consumidas</span>
+            <span className="text-xs font-medium">Total Comidas</span>
           </div>
-          <p className="text-2xl font-bold">12</p>
-          <p className="text-xs text-orange-100 mt-1">Porciones hoy</p>
+          <p className="text-2xl font-bold">{totalMealsToday}</p>
+          <p className="text-xs text-orange-100 mt-1">Registradas hoy</p>
         </CardContent>
       </Card>
     </div>
@@ -181,13 +184,12 @@ const NutritionTips = () => {
   );
 };
 
-
 export default async function NutritionPage() {
   const [data, goals] = await Promise.all([getNutritionDashboardData(), getUserNutritionGoals()]);
 
   if (!data || !goals) return <div className="p-8">Error al cargar los datos</div>;
 
-  const { progress, history } = data;
+  const { progress, history, stats } = data;
 
   const initialGoals = {
     mealsPerDay: goals.meals_per_day ?? 3,
@@ -248,7 +250,10 @@ export default async function NutritionPage() {
           {/* Progreso y estadísticas de nutrición */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <ProgressDisplay progress={progress} />
-            <NutritionStats />
+            <NutritionStats 
+              healthyMealsThisWeek={stats?.healthyMealsThisWeek || 0} 
+              totalMealsToday={stats?.totalMealsToday || 0} 
+            />
           </div>
 
           {/* Formulario para agregar comida */}

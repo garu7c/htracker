@@ -10,7 +10,15 @@ function getTodayDateString(): string {
   return today.toISOString().split('T')[0];
 }
 
-//Obtener todoos los datos de ejercicio del usuario para el dashboard
+function getStartOfWeek(): string {
+  const today = new Date();
+  const dayOfWeek = today.getDay();
+  const diff = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+  const startOfWeek = new Date(today.setDate(diff));
+  return startOfWeek.toISOString().split('T')[0];
+}
+
+// Obtener todos los datos de ejercicio del usuario para el dashboard
 export async function getExerciseDashboardData(): Promise<ExerciseSectionData> {
   const supabase = createServerSupabaseClient();
 
@@ -19,24 +27,24 @@ export async function getExerciseDashboardData(): Promise<ExerciseSectionData> {
     redirect('/login');
   }
 
-  //const GOAL = 3;
   const todayString = getTodayDateString();
+  const startOfWeek = getStartOfWeek();
 
-  //Obtener metas y racha
+  // Obtener metas y racha
   const goalsPromise = supabase
     .from('user_exercise_goals')
     .select('exercise_goal_duration, current_streak_exercise')
     .eq('user_id', user.id)
     .single();
 
-  //Obtener el conteo de hoy  
+  // Obtener el conteo de HOY solamente
   const progressPromise = supabase
     .from('exercise_entries')
-    .select('duration_minutes', { count: 'exact'})
+    .select('duration_minutes')
     .eq('user_id', user.id)
-    .eq('entry_date', todayString);
+    .eq('entry_date', todayString); // Solo registros de hoy
 
-  //Historial reciente  
+  // Historial reciente - todos los registros ordenados por fecha
   const historyPromise = supabase
     .from('exercise_entries')
     .select('*')
@@ -45,19 +53,30 @@ export async function getExerciseDashboardData(): Promise<ExerciseSectionData> {
     .order('created_at', { ascending: false })
     .limit(5);
 
-  //Obtener entradas para calcular racha  
-  const streakPromise = supabase
+  // Obtener sesiones de CARDIO de esta semana
+  const cardioPromise = supabase
     .from('exercise_entries')
-    .select('entry_date')
+    .select('*')
     .eq('user_id', user.id)
-    .gte('entry_date', new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0])
-    .order('entry_date', { ascending: false });
+    .gte('entry_date', startOfWeek)
+    .lte('entry_date', todayString)
+    .or('exercise_type.ilike.%cardio%,exercise_type.ilike.%correr%,exercise_type.ilike.%corriendo%,exercise_type.ilike.%carrera%,exercise_type.ilike.%trotar%');
 
-  const [progressResult, historyResult, streakResult, goalsResult] = await Promise.all([
+  // Obtener sesiones de FUERZA de esta semana
+  const strengthPromise = supabase
+    .from('exercise_entries')
+    .select('*')
+    .eq('user_id', user.id)
+    .gte('entry_date', startOfWeek)
+    .lte('entry_date', todayString)
+    .or('exercise_type.ilike.%fuerza%,exercise_type.ilike.%pesas%,exercise_type.ilike.%musculación%,exercise_type.ilike.%gimnasio%,exercise_type.ilike.%levantamiento%');
+
+  const [progressResult, historyResult, goalsResult, cardioResult, strengthResult] = await Promise.all([
     progressPromise,
     historyPromise,
-    streakPromise,
     goalsPromise,
+    cardioPromise,
+    strengthPromise, // CORREGIDO: era strengthResult
   ]);
 
   let dailyGoalDuration = 0;
@@ -68,45 +87,32 @@ export async function getExerciseDashboardData(): Promise<ExerciseSectionData> {
     currentStreak = goalsResult.data.current_streak_exercise ?? 0;
   }
 
+  // Solo contar minutos de HOY
   const totalMinutesToday = progressResult.data?.reduce((sum, entry) => sum + entry.duration_minutes, 0) ?? 0;
 
   const progress: DailyProgress = {
-    current: totalMinutesToday,
+    current: totalMinutesToday, // Solo minutos de hoy
     goal: dailyGoalDuration,
     streak: currentStreak,
   };
 
   const history: ExerciseEntry[] = (historyResult.data as ExerciseEntry[]) || [];
-/*
-  if (streakResult.data) {
-    const uniqueDates = [...new Set(streakResult.data.map(e => e.entry_date))];
-    
-    let currentStreak = 0;
-    let today = new Date(todayString + 'T00:00:00');
 
-    if (uniqueDates.includes(todayString)) {
-      currentStreak = 1;
-      let yesterday = new Date(today);
-      yesterday.setDate(yesterday.getDate() - 1);
-      
-      for (let i = 1; i < uniqueDates.length; i++) {
-        const yesterdayString = yesterday.toISOString().split('T')[0];
-        if (uniqueDates.includes(yesterdayString)) {
-          currentStreak++;
-          yesterday.setDate(yesterday.getDate() - 1);
-        } else {
-          break;
-        }
-      }
-    } else {
-      currentStreak = 0;
+  // Calcular estadísticas de cardio y fuerza (de la semana completa)
+  const cardioSessions = cardioResult.data?.length || 0;
+  const strengthSessions = strengthResult.data?.length || 0;
+
+  return { 
+    progress, 
+    history,
+    stats: {
+      cardioSessions,
+      strengthSessions
     }
-    progress.streak = currentStreak;
-  }
-*/
-  return { progress, history };
+  };
 }
 
+// El resto de tus funciones permanecen igual...
 export async function getUserExerciseGoals(): Promise<{ daily_sessions_goal: number; min_duration_goal: number }> {
   const supabase = createServerSupabaseClient();
 
@@ -142,7 +148,7 @@ export async function saveUserExerciseGoals({ durationGoal }: {
   }
 
   const goalUpdate = {
-    user_id: user.id, // Asegúrate de incluir el user_id
+    user_id: user.id,
     exercise_goal_duration: durationGoal,
     created_at: new Date().toISOString(),
   };
@@ -161,10 +167,10 @@ export async function saveUserExerciseGoals({ durationGoal }: {
   return { success: true, message: 'Metas guardadas exitosamente.' };
 }
 
-//Registrar una nueva entrada de ejercicio
+// Registrar una nueva entrada de ejercicio - siempre usa fecha actual
 export async function addExerciseEntry(formData: FormData): Promise<{ success: boolean; message: string }> {
   const supabase = createServerSupabaseClient();
-  const todayString = getTodayDateString();
+  const todayString = getTodayDateString(); // Siempre fecha actual para nuevos registros
 
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
@@ -187,10 +193,9 @@ export async function addExerciseEntry(formData: FormData): Promise<{ success: b
     return { success: false, message: 'Intensidad no válida.' };
   }
 
-  //Crear la nueva entrada
   const newEntry: Omit<ExerciseEntry, 'id' | 'created_at'> = {
     user_id: user.id,
-    entry_date: todayString,
+    entry_date: todayString, // Siempre fecha actual
     exercise_type: exerciseType,
     duration_minutes: durationMinutes,
     intensity: intensity,

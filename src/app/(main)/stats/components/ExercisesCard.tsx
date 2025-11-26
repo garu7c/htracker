@@ -2,10 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/client';
-import { DailyProgress } from '@/types/db';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { TrendingUp } from 'lucide-react';
+import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from "recharts";
+
+interface DailyProgress {
+  current: number;
+  goal: number;
+}
 
 interface ExerciseStats {
   progress: DailyProgress;
@@ -22,8 +26,9 @@ export default function ExercisesCard({ userId }: { userId: string }) {
     async function loadStats() {
       try {
         const today = new Date().toISOString().split('T')[0];
+        const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
-        // Obtener progreso de hoy
+        // Obtener datos de hoy
         const { data: todayData } = await supabase
           .from('exercise_entries')
           .select('duration_minutes')
@@ -33,7 +38,6 @@ export default function ExercisesCard({ userId }: { userId: string }) {
         const totalToday = (todayData || []).reduce((sum, e) => sum + e.duration_minutes, 0);
 
         // Obtener datos de la semana
-        const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
         const { data: weekData } = await supabase
           .from('exercise_entries')
           .select('duration_minutes')
@@ -43,10 +47,10 @@ export default function ExercisesCard({ userId }: { userId: string }) {
         const weekTotal = (weekData || []).reduce((sum, e) => sum + e.duration_minutes, 0);
         const avgPerSession = weekData && weekData.length > 0 ? Math.round(weekTotal / weekData.length) : 0;
 
-        // Obtener meta del usuario
+        // Obtener meta
         const { data: goalData } = await supabase
           .from('user_exercise_goals')
-          .select('exercise_goal_duration, current_streak_exercise')
+          .select('exercise_goal_duration')
           .eq('user_id', userId)
           .single();
 
@@ -54,7 +58,6 @@ export default function ExercisesCard({ userId }: { userId: string }) {
           progress: {
             current: totalToday,
             goal: goalData?.exercise_goal_duration || 30,
-            streak: goalData?.current_streak_exercise || 0,
           },
           weekTotal,
           averagePerSession: avgPerSession,
@@ -67,15 +70,18 @@ export default function ExercisesCard({ userId }: { userId: string }) {
     }
 
     loadStats();
-  }, [userId, supabase]);
+  }, [userId]);
 
   if (loading) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Ejercicio</CardTitle>
+      <Card className="flex flex-col relative overflow-hidden">
+        <CardHeader className="items-center pb-0">
+          <CardTitle className="flex items-center gap-2 text-xs text-indigo-800">
+            <TrendingUp className="h-3 w-3" />
+            Ejercicio
+          </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex flex-1 items-center justify-center">
           <p className="text-sm text-gray-500">Cargando...</p>
         </CardContent>
       </Card>
@@ -84,57 +90,99 @@ export default function ExercisesCard({ userId }: { userId: string }) {
 
   if (!stats) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Ejercicio</CardTitle>
+      <Card className="flex flex-col relative overflow-hidden">
+        <CardHeader className="items-center pb-0">
+          <CardTitle className="flex items-center gap-2 text-xs text-indigo-800">
+            <TrendingUp className="h-3 w-3" />
+            Ejercicio
+          </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex flex-1 items-center justify-center">
           <p className="text-sm text-gray-500">No hay datos disponibles</p>
         </CardContent>
       </Card>
     );
   }
 
-  const progressPercent = (stats.progress.current / stats.progress.goal) * 100;
+  const progressPercent = Math.min(100, Math.round((stats.progress.current / stats.progress.goal) * 100));
+
+  const chartData = [
+    { 
+      name: "Total", 
+      current: Math.min(stats.progress.current, stats.progress.goal), 
+      remaining: Math.max(0, stats.progress.goal - stats.progress.current),
+      total: stats.progress.goal,
+    }
+  ];
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="flex items-center gap-2 text-sm">
-              <TrendingUp className="h-4 w-4 text-blue-600" />
-              Ejercicio
-            </CardTitle>
-            <CardDescription className="text-xs">Progreso de hoy</CardDescription>
-          </div>
-          <div className="text-right">
-            <p className="text-2xl font-bold text-blue-600">{Math.round(progressPercent)}%</p>
-            <p className="text-xs text-gray-500">completado</p>
-          </div>
-        </div>
+    <Card className="flex flex-col relative overflow-hidden"> 
+      <CardHeader className="items-center pb-0">
+        <CardTitle className="flex items-center gap-2 text-xs text-indigo-800">
+          <TrendingUp className="h-3 w-3" />
+          Ejercicio
+        </CardTitle>
+        <CardDescription className="text-xs">
+          Progreso de hoy: {stats.progress.current} min
+        </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-3">
-        <div className="space-y-2">
-          <div className="flex justify-between text-xs">
-            <span className="text-gray-600">{stats.progress.current} / {stats.progress.goal} min</span>
-          </div>
-          <Progress value={progressPercent} className="h-2" />
-        </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <div className="bg-blue-50 p-2 rounded-lg">
-            <p className="text-xs text-gray-600 mb-1">Racha</p>
-            <p className="text-lg font-bold text-blue-600">{stats.progress.streak}</p>
-            <p className="text-xs text-gray-500">días</p>
-          </div>
-          <div className="bg-blue-50 p-2 rounded-lg">
-            <p className="text-xs text-gray-600 mb-1">Promedio semanal</p>
-            <p className="text-lg font-bold text-blue-600">{stats.averagePerSession}</p>
-            <p className="text-xs text-gray-500">min/sesión</p>
-          </div>
+      <CardContent className="flex flex-1 items-center justify-center pt-0 pb-12">
+        <div className="mx-auto aspect-square w-full max-w-[160px]">
+          <RadialBarChart
+            width={160}
+            height={160}
+            data={chartData}
+            startAngle={180}
+            endAngle={0}
+            innerRadius={60}
+            outerRadius={80}
+          >
+            <PolarRadiusAxis tick={false} tickLine={false} axisLine={false} />
+            <RadialBar
+              dataKey="remaining"
+              stackId="a"
+              cornerRadius={5}
+              fill="#e0e7ff" // indigo-100
+            />
+            <RadialBar
+              dataKey="current"
+              stackId="a"
+              cornerRadius={5}
+              fill="#3730a3" // indigo-800
+            />
+            
+            {/* Etiqueta del porcentaje */}
+            <text
+              x="50%"
+              y="50%"
+              textAnchor="middle"
+              dominantBaseline="middle"
+              className="text-xl font-bold fill-indigo-800"
+            >
+              {progressPercent}%
+            </text>
+            <text
+              x="50%"
+              y="60%"
+              textAnchor="middle"
+              dominantBaseline="middle"
+              className="text-xs fill-gray-500"
+            >
+              Completado
+            </text>
+          </RadialBarChart>
         </div>
       </CardContent>
+
+      <CardFooter className="absolute bottom-0 left-0 right-0 flex-col gap-1 text-xs pb-3 bg-background">
+        <div className="flex items-center gap-1 leading-none font-medium text-xs">
+          Promedio Semanal <TrendingUp className="h-3 w-3" />
+        </div>
+        <div className="text-muted-foreground leading-none text-xs">
+          {stats.averagePerSession} min/sesión
+        </div>
+      </CardFooter>
     </Card>
   );
 }

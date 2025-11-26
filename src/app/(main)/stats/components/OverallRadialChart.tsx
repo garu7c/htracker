@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { TrendingUp } from 'lucide-react';
 
 interface OverallStats {
   exercise: number;
@@ -73,21 +74,28 @@ export default function OverallRadialChart({ userId }: { userId: string }) {
           .eq('user_id', userId)
           .single();
 
+        const sleepHours = sleepData?.total_hours ? parseFloat(sleepData.total_hours) : 0;
         const sleepPercent = Math.min(
-          ((sleepData?.total_hours || 0) / (sleepGoal?.target_hours || 8)) * 100,
+          (sleepHours / (sleepGoal?.target_hours || 8)) * 100,
           100
         );
 
-        // Nutrición
+        // Nutrición - CORREGIDO
         const { data: nutritionData } = await supabase
           .from('nutrition_entries')
           .select('is_healthy')
           .eq('user_id', userId)
           .eq('entry_date', today);
 
-        const totalMeals = nutritionData?.length || 0;
+        const { data: nutritionGoal } = await supabase
+          .from('nutrition_goals')
+          .select('nutrition_goal_meals')
+          .eq('user_id', userId)
+          .single();
+
         const healthyMeals = (nutritionData || []).filter((m) => m.is_healthy).length;
-        const nutritionPercent = totalMeals > 0 ? (healthyMeals / totalMeals) * 100 : 0;
+        const goalMeals = nutritionGoal?.nutrition_goal_meals || 3;
+        const nutritionPercent = Math.min((healthyMeals / goalMeals) * 100, 100);
 
         setStats({
           exercise: Math.round(exercisePercent),
@@ -122,109 +130,165 @@ export default function OverallRadialChart({ userId }: { userId: string }) {
     return null;
   }
 
-  const sections = [
-    { label: 'Ejercicio', value: stats.exercise, color: '#3b82f6', startAngle: 0 },
-    { label: 'Hidratación', value: stats.hydration, color: '#06b6d4', startAngle: 90 },
-    { label: 'Sueño', value: stats.sleep, color: '#a855f7', startAngle: 180 },
-    { label: 'Nutrición', value: stats.nutrition, color: '#f59e0b', startAngle: 270 },
+  const categories = [
+    { name: 'Ejercicio', value: stats.exercise, color: '#3730a3' },
+    { name: 'Hidratación', value: stats.hydration, color: '#1d4ed8' },
+    { name: 'Sueño', value: stats.sleep, color: '#6b21a8' },
+    { name: 'Nutrición', value: stats.nutrition, color: '#166534' },
   ];
 
-  const totalValue = 100;
-  const circumference = 2 * Math.PI * 45;
+  const averageScore = Math.round(
+    categories.reduce((sum, cat) => sum + cat.value, 0) / categories.length
+  );
+
+  // Calcular puntos para el polígono del radar
+  const calculatePoint = (index: number, value: number, maxRadius: number) => {
+    const angle = (index * 90 * Math.PI) / 180; // 4 categorías = 90° cada una
+    const radius = (value / 100) * maxRadius;
+    return {
+      x: 100 + radius * Math.cos(angle),
+      y: 100 + radius * Math.sin(angle)
+    };
+  };
+
+  const maxRadius = 80;
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Resumen General</CardTitle>
-        <CardDescription>Progreso de hoy</CardDescription>
+      <CardHeader className="text-center pb-4">
+        <CardTitle className="text-lg">Radar Chart - Progress</CardTitle>
+        <CardDescription>
+          Showing total progress across health categories
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col items-center gap-6">
-          {/* Donut Chart */}
-          <svg width="200" height="200" viewBox="0 0 200 200" className="mx-auto">
-            <circle cx="100" cy="100" r="45" fill="none" stroke="#f3f4f6" strokeWidth="12" />
-
-            {/* Ejercicio */}
-            <circle
-              cx="100"
-              cy="100"
-              r="35"
-              fill="none"
-              stroke="#3b82f6"
-              strokeWidth="8"
-              strokeDasharray={`${(stats.exercise / 100) * circumference} ${circumference}`}
-              strokeDashoffset="0"
-              strokeLinecap="round"
-              transform="rotate(-90 100 100)"
-            />
-
-            {/* Hidratación */}
-            <circle
-              cx="100"
-              cy="100"
-              r="35"
-              fill="none"
-              stroke="#06b6d4"
-              strokeWidth="8"
-              strokeDasharray={`${(stats.hydration / 100) * circumference} ${circumference}`}
-              strokeDashoffset={`-${(stats.exercise / 100) * circumference}`}
-              strokeLinecap="round"
-              transform="rotate(-90 100 100)"
-            />
-
-            {/* Sueño */}
-            <circle
-              cx="100"
-              cy="100"
-              r="35"
-              fill="none"
-              stroke="#a855f7"
-              strokeWidth="8"
-              strokeDasharray={`${(stats.sleep / 100) * circumference} ${circumference}`}
-              strokeDashoffset={`-${((stats.exercise + stats.hydration) / 100) * circumference}`}
-              strokeLinecap="round"
-              transform="rotate(-90 100 100)"
-            />
-
-            {/* Nutrición */}
-            <circle
-              cx="100"
-              cy="100"
-              r="35"
-              fill="none"
-              stroke="#f59e0b"
-              strokeWidth="8"
-              strokeDasharray={`${(stats.nutrition / 100) * circumference} ${circumference}`}
-              strokeDashoffset={`-${((stats.exercise + stats.hydration + stats.sleep) / 100) * circumference}`}
-              strokeLinecap="round"
-              transform="rotate(-90 100 100)"
-            />
-
-            {/* Centro del donut */}
-            <circle cx="100" cy="100" r="22" fill="white" />
-            <text x="100" y="100" textAnchor="middle" dy="0.3em" className="text-xs font-bold fill-gray-900">
-              {Math.round((stats.exercise + stats.hydration + stats.sleep + stats.nutrition) / 4)}%
-            </text>
-          </svg>
-
-          {/* Leyenda */}
-          <div className="w-full space-y-1">
-            {sections.map((section) => (
-              <div key={section.label} className="flex items-center justify-between text-xs">
-                <div className="flex items-center gap-2">
-                  <div
-                    className="w-2 h-2 rounded-full"
-                    style={{ backgroundColor: section.color }}
+          {/* Radar Chart Container */}
+          <div className="relative w-64 h-64 mx-auto">
+            <svg width="256" height="256" viewBox="0 0 200 200" className="absolute inset-0">
+              {/* Grid Circles */}
+              <circle cx="100" cy="100" r="60" fill="none" stroke="#e5e7eb" strokeWidth="1" />
+              <circle cx="100" cy="100" r="40" fill="none" stroke="#e5e7eb" strokeWidth="1" />
+              <circle cx="100" cy="100" r="20" fill="none" stroke="#e5e7eb" strokeWidth="1" />
+              
+              {/* Category Lines */}
+              {categories.map((_, index) => {
+                const angle = (index * 90 * Math.PI) / 180;
+                const x = 100 + 60 * Math.cos(angle);
+                const y = 100 + 60 * Math.sin(angle);
+                return (
+                  <line
+                    key={index}
+                    x1="100"
+                    y1="100"
+                    x2={x}
+                    y2={y}
+                    stroke="#e5e7eb"
+                    strokeWidth="1"
                   />
-                  <span className="text-gray-700">{section.label}</span>
-                </div>
-                <span className="font-bold text-gray-900">{section.value}%</span>
-              </div>
-            ))}
+                );
+              })}
+
+              {/* Radar Area */}
+              <polygon
+                points={categories.map((cat, index) => {
+                  const point = calculatePoint(index, cat.value, maxRadius);
+                  return `${point.x},${point.y}`;
+                }).join(' ')}
+                fill="rgba(59, 130, 246, 0.2)"
+                stroke="#3b82f6"
+                strokeWidth="2"
+              />
+
+              {/* Data Points */}
+              {categories.map((cat, index) => {
+                const point = calculatePoint(index, cat.value, maxRadius);
+                return (
+                  <g key={cat.name}>
+                    <circle
+                      cx={point.x}
+                      cy={point.y}
+                      r="4"
+                      fill={cat.color}
+                      stroke="white"
+                      strokeWidth="2"
+                    />
+                    <text
+                      x={point.x}
+                      y={point.y - 8}
+                      textAnchor="middle"
+                      className="text-xs font-bold"
+                      fill="#374151"
+                    >
+                      {/*{cat.value}%*/}
+                    </text>
+                  </g>
+                );
+              })}
+
+              {/* Category Labels */}
+              {categories.map((cat, index) => {
+                const angle = (index * 90 * Math.PI) / 180;
+                const radius = 75;
+                const x = 100 + radius * Math.cos(angle);
+                const y = 100 + radius * Math.sin(angle);
+                
+                // Determinar textAnchor basado en la posición
+                let textAnchor: "start" | "middle" | "end" = "middle";
+                if (index === 1) textAnchor = "start";
+                if (index === 3) textAnchor = "end";
+
+                // Ajustar posición vertical
+                let dy = 0;
+                if (index === 0) dy = -8;
+                if (index === 2) dy = 12;
+
+                return (
+                  <text
+                    key={cat.name}
+                    x={x}
+                    y={y}
+                    textAnchor={textAnchor}
+                    dy={dy}
+                    className="text-xs font-medium"
+                    fill="#4b5563"
+                  >
+                    {cat.name}
+                  </text>
+                );
+              })}
+            </svg>
           </div>
 
+          {/* Trend Information */}
+          <div className="text-center space-y-2">
+            <div className="flex items-center justify-center gap-2 text-sm font-medium text-green-600">
+              <TrendingUp className="h-4 w-4" />
+              Progress overview
+            </div>
+            <p className="text-xs text-gray-500">
+              Health categories performance
+            </p>
+          </div>
+
+          {/* Average Score */}
           <div className="text-center">
-            <p className="text-xs text-gray-500">Promedio general: {Math.round((stats.exercise + stats.hydration + stats.sleep + stats.nutrition) / 4)}%</p>
+            <p className="text-2xl font-bold text-gray-900">{averageScore}%</p>
+            <p className="text-xs text-gray-500">Average Score</p>
+          </div>
+
+          {/* Mini Legend */}
+          <div className="grid grid-cols-2 gap-2 w-full">
+            {categories.map((cat) => (
+              <div key={cat.name} className="flex items-center gap-2 text-xs">
+                <div
+                  className="w-2 h-2 rounded-full"
+                  style={{ backgroundColor: cat.color }}
+                />
+                <span className="text-gray-600">{cat.name}</span>
+                <span className="font-bold text-gray-900 ml-auto">{cat.value}%</span>
+              </div>
+            ))}
           </div>
         </div>
       </CardContent>
