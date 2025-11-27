@@ -4,6 +4,7 @@ import "./globals.css";
 import Sidebar from '@/components/layout/Sidebar';
 import { Toaster } from '@/components/ui/sonner';
 import { cookies } from 'next/headers';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,27 +39,29 @@ export default async function RootLayout({
   const authenticated = await isAuthenticated();
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {/* Solo mostrar el layout de la app si está autenticado */}
-        {authenticated ? (
-          <div className="min-h-screen bg-blue-50/40">
-            {/* Sidebar principal */}
-            <Sidebar />
+        <ThemeProvider>
+          {/* Solo mostrar el layout de la app si está autenticado */}
+          {authenticated ? (
+            <div className="min-h-screen bg-blue-50/40 dark:bg-black">
+              {/* Sidebar principal */}
+              <Sidebar />
 
-            {/* Contenido Principal */}
-            <main className="min-h-screen pl-6 pt-6 pr-6 pb-6">
+              {/* Contenido Principal */}
+              <main className="min-h-screen pl-6 pt-6 pr-6 pb-6">
+                {children}
+              </main>
+            </div>
+          ) : (
+            // Si no está autenticado, mostrar solo el contenido sin sidebar
+            <div className="min-h-screen bg-gray-50 dark:bg-black">
               {children}
-            </main>
-          </div>
-        ) : (
-          // Si no está autenticado, mostrar solo el contenido sin sidebar
-          <div className="min-h-screen bg-gray-50">
-            {children}
-          </div>
-        )}
+            </div>
+          )}
 
-        <Toaster />
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -11,7 +11,7 @@ export default function MainLayout({
   const [sidebarWidth, setSidebarWidth] = useState('6rem'); // Actualizado a 6rem
 
   return (
-    <div className="flex min-h-screen bg-blue-100/50">
+    <div className="flex min-h-screen">
       <div
         className="transition-all duration-300 ease-in-out"
         style={{ width: sidebarWidth }}
