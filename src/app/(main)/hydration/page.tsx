@@ -15,7 +15,7 @@ const HydrationHistory = ({ entries }: { entries: any[] }) => {
     <Card className="shadow-lg border border-gray-200 bg-white/80 backdrop-blur-sm h-full">
       <CardHeader className="pb-2">
         <CardTitle className="text-sm font-bold flex items-center gap-2 text-blue-700">
-          <Clock className="h-4 w-4" /> Historial de Hoy
+          <Clock className="h-4 w-4" /> Historial
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">
@@ -34,12 +34,12 @@ const HydrationHistory = ({ entries }: { entries: any[] }) => {
                   <Droplets className="h-4 w-4 text-blue-600" />
                   <div>
                     <p className="font-semibold text-xs text-gray-800">{entry.amount} ml</p>
-                    <p className="text-xs text-gray-500">
+                    {/*<p className="text-xs text-gray-500">
                       {new Date(entry.timestamp).toLocaleTimeString('es-ES', {
                         hour: '2-digit',
                         minute: '2-digit'
                       })}
-                    </p>
+                    </p>*/}
                   </div>
                 </div>
 

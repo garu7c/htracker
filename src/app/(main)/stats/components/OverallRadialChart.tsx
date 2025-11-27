@@ -156,10 +156,7 @@ export default function OverallRadialChart({ userId }: { userId: string }) {
   return (
     <Card>
       <CardHeader className="text-center pb-4">
-        <CardTitle className="text-lg">Radar Chart - Progress</CardTitle>
-        <CardDescription>
-          Showing total progress across health categories
-        </CardDescription>
+        <CardTitle className="text-lg">Progreso Diario</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col items-center gap-6">
@@ -264,17 +261,17 @@ export default function OverallRadialChart({ userId }: { userId: string }) {
           <div className="text-center space-y-2">
             <div className="flex items-center justify-center gap-2 text-sm font-medium text-green-600">
               <TrendingUp className="h-4 w-4" />
-              Progress overview
+              Vista general de rendimiento
             </div>
             <p className="text-xs text-gray-500">
-              Health categories performance
+              Secciones de salud y bienestar evaluadas hoy
             </p>
           </div>
 
           {/* Average Score */}
           <div className="text-center">
             <p className="text-2xl font-bold text-gray-900">{averageScore}%</p>
-            <p className="text-xs text-gray-500">Average Score</p>
+            <p className="text-xs text-gray-500">En relacion a tus metas</p>
           </div>
 
           {/* Mini Legend */}
