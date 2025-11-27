@@ -71,8 +71,7 @@ const SleepGoalsForm = ({ initialGoals }: { initialGoals: GoalsProps }) => {
                 required
                 min="1"
               />
-              <p className="text-xs text-gray-500">Columna `sleep_goal_hours`</p>
-            </div>
+              </div>
 
             {/* Hora Ideal para Dormir */}
             <div className="space-y-2">
@@ -83,8 +82,7 @@ const SleepGoalsForm = ({ initialGoals }: { initialGoals: GoalsProps }) => {
                 value={idealSleepTime} 
                 onChange={(e) => setIdealSleepTime(e.target.value)}
               />
-              <p className="text-xs text-gray-500">Columna `sleep_ideal_bed_time`</p>
-            </div>
+              </div>
 
             {/* Hora Ideal para Despertar */}
             <div className="space-y-2">
@@ -95,8 +93,7 @@ const SleepGoalsForm = ({ initialGoals }: { initialGoals: GoalsProps }) => {
                 value={idealWakeTime} 
                 onChange={(e) => setIdealWakeTime(e.target.value)}
               />
-              <p className="text-xs text-gray-500">Columna `sleep_ideal_wake_time`</p>
-            </div>
+              </div>
             
             {/* Mensajes de feedback */}
             {message && (
