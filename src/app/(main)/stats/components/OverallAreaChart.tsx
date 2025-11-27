@@ -20,9 +20,9 @@ interface DailyStats {
   date: string;
   day: string;
   exercise_minutes: number;
-  nutrition_healthy_meals: number; // Nueva métrica: # de comidas saludables
+  nutrition_healthy_meals: number;
   sleep_hours: number;
-  hydration_quantity: number; // Nueva métrica: cantidad de bebida (vasos/ml)
+  hydration_quantity: number;
 }
 
 // Colores basados en tu solicitud
@@ -45,7 +45,7 @@ export default function OverallAreaChart({ userId }: { userId: string }) {
         const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
         
         // ------------------------------------------------------------------
-        // 1. Ejercicio (OK: entry_date, duration_minutes)
+        // 1. Ejercicio
         // ------------------------------------------------------------------
         const { data: exerciseEntries } = await supabase
           .from('exercise_entries')
@@ -54,7 +54,7 @@ export default function OverallAreaChart({ userId }: { userId: string }) {
           .gte('entry_date', weekAgo);
 
         // ------------------------------------------------------------------
-        // 2. Nutrición (Ajuste: entry_date, is_healthy)
+        // 2. Nutrición
         // ------------------------------------------------------------------
         const { data: nutritionEntries } = await supabase
           .from('nutrition_entries') 
@@ -63,20 +63,20 @@ export default function OverallAreaChart({ userId }: { userId: string }) {
           .gte('entry_date', weekAgo);
         
         // ------------------------------------------------------------------
-        // 3. Sueño (Ajuste: sleep_date, total_hours)
+        // 3. Sueño
         // ------------------------------------------------------------------
         const { data: sleepEntries } = await supabase
           .from('sleep_entries')
-          .select('sleep_date, total_hours') // Usar 'sleep_date' y 'total_hours'
+          .select('sleep_date, total_hours')
           .eq('user_id', userId)
           .gte('sleep_date', weekAgo);
 
         // ------------------------------------------------------------------
-        // 4. Hidratación (Ajuste: entry_date, quantity)
+        // 4. Hidratación
         // ------------------------------------------------------------------
         const { data: hydrationEntries } = await supabase
           .from('hydration_entries')
-          .select('entry_date, quantity') // Usar 'quantity'
+          .select('entry_date, quantity')
           .eq('user_id', userId)
           .gte('entry_date', weekAgo);
 
@@ -99,35 +99,43 @@ export default function OverallAreaChart({ userId }: { userId: string }) {
             };
         }
 
-        // Mapear Ejercicio
+        // Mapear Ejercicio - CORREGIDO
         (exerciseEntries || []).forEach((entry) => {
-            combinedData[entry.entry_date].exercise_minutes += entry.duration_minutes;
+            if (combinedData[entry.entry_date]) {
+                combinedData[entry.entry_date].exercise_minutes += entry.duration_minutes;
+            }
         });
         
-        // Mapear Nutrición (Contar comidas saludables)
+        // Mapear Nutrición - CORREGIDO
         (nutritionEntries || []).forEach((entry) => {
-            if (entry.is_healthy) { // Solo si 'is_healthy' es true
-                 combinedData[entry.entry_date].nutrition_healthy_meals += 1;
+            if (combinedData[entry.entry_date] && entry.is_healthy) {
+                combinedData[entry.entry_date].nutrition_healthy_meals += 1;
             }
         });
 
-        // Mapear Sueño (Usar sleep_date)
+        // Mapear Sueño - CORREGIDO
         (sleepEntries || []).forEach((entry) => {
-             // Usar 'sleep_date' para mapear los datos de sueño
-            combinedData[entry.sleep_date].sleep_hours += entry.total_hours; 
+            if (combinedData[entry.sleep_date] && entry.total_hours) {
+                combinedData[entry.sleep_date].sleep_hours += parseFloat(entry.total_hours);
+            }
         });
 
-        // Mapear Hidratación
+        // Mapear Hidratación - CORREGIDO
         (hydrationEntries || []).forEach((entry) => {
-            combinedData[entry.entry_date].hydration_quantity += entry.quantity;
+            if (combinedData[entry.entry_date]) {
+                combinedData[entry.entry_date].hydration_quantity += entry.quantity;
+            }
         });
-        
 
-        setData(Object.values(combinedData).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()));
+        // Convertir a array y ordenar
+        const dataArray = Object.values(combinedData).sort((a, b) => 
+            new Date(a.date).getTime() - new Date(b.date).getTime()
+        );
+
+        setData(dataArray);
 
       } catch (err) {
         console.error('Error loading weekly data:', err);
-        // Si hay errores 406, podrías verlos aquí
       } finally {
         setLoading(false);
       }
@@ -136,7 +144,6 @@ export default function OverallAreaChart({ userId }: { userId: string }) {
     loadWeeklyData();
   }, [userId, supabase]);
 
-  // ... (El resto del código de Recharts, Tooltip y renderizado permanece igual)
   if (loading) {
     return (
       <Card>
@@ -167,6 +174,22 @@ export default function OverallAreaChart({ userId }: { userId: string }) {
     );
   }
 
+  // Tooltip personalizado
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white dark:bg-gray-800 p-3 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg">
+          <p className="font-medium text-gray-900 dark:text-white">{`Día: ${label}`}</p>
+          {payload.map((entry: any, index: number) => (
+            <p key={index} className="text-sm" style={{ color: entry.color }}>
+              {`${entry.name}: ${entry.value}${entry.unit || ''}`}
+            </p>
+          ))}
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
     <Card>
@@ -182,12 +205,14 @@ export default function OverallAreaChart({ userId }: { userId: string }) {
               margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
             >
               <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-              <XAxis dataKey="day" />
-              <YAxis />
-              <Tooltip 
-                formatter={(value, name) => [value, name]}
-                labelFormatter={(label) => `Día: ${label}`}
+              <XAxis 
+                dataKey="day" 
+                tick={{ fontSize: 12 }}
               />
+              <YAxis 
+                tick={{ fontSize: 12 }}
+              />
+              <Tooltip content={<CustomTooltip />} />
               <Legend />
 
               {/* Ejercicio: indigo-800 */}
@@ -197,41 +222,45 @@ export default function OverallAreaChart({ userId }: { userId: string }) {
                 stackId="1"
                 stroke={COLORS.exercise} 
                 fill={COLORS.exercise} 
-                name="Ejercicio (min)"
+                name="Ejercicio"
                 unit=" min"
+                strokeWidth={2}
               />
 
-              {/* Alimentación: green-800 */}
+              {/* Nutrición: green-800 */}
               <Area 
                 type="monotone" 
-                dataKey="nutrition_healthy_meals" // Actualizado
+                dataKey="nutrition_healthy_meals"
                 stackId="1" 
                 stroke={COLORS.nutrition} 
                 fill={COLORS.nutrition} 
-                name="Alimentación (# comidas)"
+                name="Comidas Saludables"
                 unit=" comidas"
+                strokeWidth={2}
               />
 
               {/* Sueño: purple-800 */}
               <Area 
                 type="monotone" 
-                dataKey="sleep_hours" // Actualizado
+                dataKey="sleep_hours"
                 stackId="1" 
                 stroke={COLORS.sleep} 
                 fill={COLORS.sleep} 
-                name="Sueño (horas)"
+                name="Sueño"
                 unit=" h"
+                strokeWidth={2}
               />
               
               {/* Hidratación: blue-700 */}
               <Area 
                 type="monotone" 
-                dataKey="hydration_quantity" // Actualizado
+                dataKey="hydration_quantity"
                 stackId="1" 
                 stroke={COLORS.hydration} 
                 fill={COLORS.hydration} 
-                name="Hidratación (cantidad)"
-                unit=" cant."
+                name="Hidratación"
+                unit=" vasos"
+                strokeWidth={2}
               />
             </AreaChart>
           </ResponsiveContainer>

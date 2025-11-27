@@ -1,8 +1,11 @@
 import { NextResponse } from 'next/server';
+import { createServerSupabaseClient } from '@/lib/server';
 
 export async function POST() {
   try {
-    // Create a response that clears any auth-related cookies
+    const supabase = await createServerSupabaseClient();
+    await supabase.auth.signOut();
+    
     const response = NextResponse.json({ ok: true }, { status: 200 });
     
     // Clear auth token cookies (if you're using them in the future)

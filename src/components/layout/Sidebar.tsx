@@ -3,9 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { TrendingUp, Droplets, Utensils, Moon, Dumbbell, LogOut } from 'lucide-react';
+import { TrendingUp, Droplets, Utensils, Moon, Dumbbell, LogOut, Sun } from 'lucide-react';
 import { getTexts } from '@/lib/i18n';
 import Image from 'next/image';
+import { useTheme } from '@/contexts/ThemeContext';
 
 const sidebarItems = [
   { key: 'stats', href: '/stats', icon: TrendingUp },
@@ -23,6 +24,7 @@ export default function Sidebar({ onWidthChange }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const t = getTexts();
+  const { theme, toggleTheme } = useTheme();
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -74,7 +76,7 @@ export default function Sidebar({ onWidthChange }: SidebarProps) {
         <div className="flex items-center justify-center h-16 pb-2">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             title={isExpanded ? 'Colapsar' : 'Expandir'}
           >
             <div className="h-10 w-10 relative">
@@ -97,8 +99,8 @@ export default function Sidebar({ onWidthChange }: SidebarProps) {
               className={`
                 flex items-center w-full px-4 py-4 rounded-xl transition-all duration-200
                 ${isActive(href)
-                  ? 'bg-blue-50 text-blue-600 font-semibold border border-blue-100'
-                  : 'text-gray-700 hover:bg-gray-100 border border-transparent'
+                  ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-semibold border border-blue-100 dark:border-blue-800'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 border border-transparent'
                 }
               `}
             >
@@ -113,17 +115,26 @@ export default function Sidebar({ onWidthChange }: SidebarProps) {
           ))}
         </nav>
 
-        {/* Botón de modo oscuro sin funcionalidad + Logout */}
-        <div className="mt-4 pt-3 border-t border-gray-200">
+        {/* Botón de modo oscuro FUNCIONAL + Logout */}
+        <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
           <button
-            aria-label="Cambiar a modo oscuro"
+            onClick={toggleTheme}
+            aria-label={theme === 'light' ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro'}
             className={`
-              flex items-center w-full px-4 py-4 rounded-xl transition-all duration-200 text-gray-700 hover:bg-gray-100 border border-transparent`}
+              flex items-center w-full px-4 py-4 rounded-xl transition-all duration-200 
+              text-gray-700 dark:text-gray-300 
+              hover:bg-gray-100 dark:hover:bg-gray-800 
+              border border-transparent
+            `}
           >
-            {/* Icono de moon con tamaño consistente: h-7 w-7 en ambos estados */}
-            <Moon className={`h-7 w-7 ${isMinimal ? 'mx-auto' : 'mr-4'}`} />
-            <span className={`transition-opacity duration-300 whitespace-nowrap overflow-hidden ${isMinimal ? 'opacity-0 w-0' : 'opacity-100 w-auto'}`}>
-              Modo Oscuro
+            {/* Icono dinámico según el tema */}
+            {theme === 'light' ? (
+              <Moon className={`h-7 w-7 ${isMinimal ? 'mx-auto' : 'mr-4'}`} />
+            ) : (
+              <Sun className={`h-7 w-7 ${isMinimal ? 'mx-auto' : 'mr-4'}`} />
+            )}
+            <span className={`cursor-pointer transition-opacity duration-300 whitespace-nowrap overflow-hidden ${isMinimal ? 'opacity-0 w-0' : 'opacity-100 w-auto'}`}>
+              {theme === 'light' ? 'Modo Oscuro' : 'Modo Claro'}
             </span>
           </button>
 
@@ -134,13 +145,15 @@ export default function Sidebar({ onWidthChange }: SidebarProps) {
               className={`
                 flex items-center w-full px-4 py-4 rounded-xl transition-all duration-200
                 font-medium
-                text-red-600 hover:bg-red-50 border border-transparent hover:border-red-100
+                text-red-600 dark:text-red-400 
+                hover:bg-red-50 dark:hover:bg-red-900/30 
+                border border-transparent hover:border-red-100 dark:hover:border-red-800
               `}
             >
               {/* Icono de logout con tamaño consistente: h-7 w-7 en ambos estados */}
               <LogOut className={`h-7 w-7 ${isMinimal ? 'mx-auto' : 'mr-4'}`} />
               <span
-                className={`transition-opacity duration-300 whitespace-nowrap overflow-hidden ${isMinimal ? 'opacity-0 w-0' : 'opacity-100 w-auto'}`}
+                className={` cursor-pointer transition-opacity duration-300 whitespace-nowrap overflow-hidden ${isMinimal ? 'opacity-0 w-0' : 'opacity-100 w-auto'}`}
               >
                 {t.sidebar.logout}
               </span>
